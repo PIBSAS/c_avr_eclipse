@@ -9,10 +9,10 @@
 
 ## Variables de entorno.
 
-- Menu Window -> Preferences -> C/C++ -> Build -> Environment.
+- Menu ``Window -> Preferences -> C/C++ -> Build -> Environment``.
 - Boton Add..
-  - Name: PATH
-  - Value: C:\avr-toolchain\bin;C:\avrdude\;C:\msys64\usr\bin
+  - Name: ``PATH``
+  - Value: ``C:\avr-toolchain\bin;C:\avrdude\;C:\msys64\usr\bin``
 
 Obviamente, descomprimiste AVR Toolchain y la renombras a avr-toolchain y la pegas en C. Lo mismo para avrdude, en el casi de msys64 es donde por defecto te pide instalarse, en usr/bin esta make.exe. Agregarlos también a la variable de entorno en Windows, incluir también eclipse, que también es solo descomprimir, mover a C:/eclipse y hacer un shorcut en el escritorio.
 
@@ -21,14 +21,14 @@ Botones Apply y Apply & Close según corresponda.
 
 # Crear Menu para flashear:
 
-- Ir a Menu Run-> External Tools -> External Tools Configuration. Clic en Program solo para seleccionar, luego Primer icono, New configuration(Justo arriba de la palabra Program).
+- Ir a Menu ``Run-> External Tools -> External Tools Configuration``. Clic en ``Program`` solo para seleccionar, luego Primer icono, ``New configuration``(Justo arriba de la palabra Program).
 
-  - Name: Flash con AVR Dude o Flash como quieras
+  - Name: ``Flash con AVR Dude`` o Flash como quieras
   - En pestaña Main:
-  - Location: C:\avrdude\avrdude.exe usando el botón Browse File System...
-  - Working Directory: ${workspace_loc:${project_name}}  
+  - Location: ``C:\avrdude\avrdude.exe`` usando el botón ``Browse File System...``
+  - Working Directory: ``${workspace_loc:${project_name}}``
 
-  - Esto es para automatizaar, sin importar cual es tu workspace o el nombre de tu  proyecto, va a funcionar, obvio si tu proyecto lo pones en la carpeta de workspace que le indicaste a eclipse en el primer lanzamiento. Por defecto, tu usuario/eclipse_workspace/tuProyecto.
+  - Esto es para automatizaar, sin importar cual es tu workspace o el nombre de tu  proyecto, va a funcionar, obvio si tu proyecto lo pones en la carpeta de workspace que le indicaste a eclipse en el primer lanzamiento. Por defecto, tu ``usuario/eclipse_workspace/tuProyecto``.
 
   - Arguments: 
 
@@ -36,21 +36,21 @@ Botones Apply y Apply & Close según corresponda.
     -p m32u4 -c avr109 -P COM${COM_PORT}  -b 57600 -D -U flash:w:${project_name}.hex:i
     ````
 
-Pero borra ${COM_PORT} y colocate justo después de la palabra COM, Presiona el Boton Variables, luego Edit Variables, en la ventana presiona New:
+Pero borra ``${COM_PORT}`` y colocate justo después de la palabra COM, Presiona el Botón ``Variables``, luego ``Edit Variables``, en la ventana presiona ``New``:
 
-- Name: COM_PORT
-- Value: 10
-- Description: Serial Port
+- Name: ``COM_PORT``
+- Value: ``10``
+- Description: ``Serial Port``
 - Apply & Close
 
-Selecciona en la ventana Select Variable COM_PORT que ahora estará y dale a OK, esto dejara la lineal de comando tal cual la presentamos arriba. Dale  a Ok.
+Selecciona en la ventana Select Variable ``COM_PORT`` que ahora estará y dale a OK, esto dejara la lineal de comando tal cual la presentamos arriba. Dale a Ok.
 
 
 # Hacer Templates para Makefile y C:
 
-- Menu Window -> preferences -> C/C++ -> Code Style -> Code Templates -> Files -> Text, Boton New, poner lo siguiente:
-  - Name: makefile Type: Makefile
-  - Description Makefile template para ATmega32U4
+- Menu ``Window -> Preferences -> C/C++ -> Code Style -> Code Templates -> Files -> Text``, Botón ``New``, poner lo siguiente:
+  - Name: ``makefile`` Type: ``Makefile``
+  - Description: ``Makefile template para ATmega32U4``
   - Pattern:
 
   ````
@@ -97,7 +97,7 @@ Luego presionar los botones:
 - Apply, Apply & Close.
 
 
-# Regresar al mismo menu pero elegir C Source File -> Default C source template, presionar Edit.
+Regresar al mismo menu pero elegir `C Source File -> Default C source template`, presionar Edit.
 
 - Description: dejar así.
 - Pattern:
@@ -121,13 +121,13 @@ Ok. aca pueden agregar más includes, esto es lo mínimo que cualquier programa 
 # Como empezar, tras todo eso?.
 
 Cerras y abris Eclipse.
-- Le das a Create a new C or C++ project o a Create project es indistinto te llevan al mismo menu.
+- Le das a ``Create a new C or C++ project`` o a ``Create project`` es indistinto te llevan al mismo menu.
 
-- En la ventana elegi Make -> Make File Project -> Next:
-  - Project name: loqueseteocurra, presionas Finish.
+- En la ventana elegi ``Make -> Make File Project -> Next``:
+  - Project name: ``loqueseteocurra``, presionas Finish.
 
 - File -> New -> Source File
-  - Source file:loqueseteocurra.c
+  - Source file:``loqueseteocurra.c``
 
 Es decir debe tener el mismo nombre que tu proyecto/SourceFolder, ya que la automatización que metimos te ayuda en eso. Sino deberías configurar cada proyecto de forma diferente.
 
@@ -136,12 +136,12 @@ Es decir debe tener el mismo nombre que tu proyecto/SourceFolder, ya que la auto
 ## Ahora el Makefile:
 
 - File -> New -> File from Template
- - File name: Makefile
+ - File name: ``Makefile``
 
-Automáticamente el campo de texto en Use template cambiara a makefile, presionas Finish. ese archivo esta automatizado, no hace falta tocarlo, si no requerís agregar CFLAGS o LDFLAGS u otra cosa que mi ignorancia no sepa.
+Automáticamente el campo de texto en Use template cambiara a ``makefile``, presionas ``Finish``. ese archivo esta automatizado, no hace falta tocarlo, si no requerís agregar ``CFLAGS`` o ``LDFLAGS`` u otra cosa que mi ignorancia no sepa.
 
 
-El martillo construye, para construir y subir, enchufar el Atmega32U4, clic en el archivo .c, en el menu superior vas a ver un menu desplegable con un icono con una C y el nombre del archivo. Desplegas y elegís Flash con AVR Dude o lo que le hayas puesto al hacer el paso de Program External Tools.
+El martillo construye, para construir y subir, enchufar el Atmega32U4, clic en el archivo ``.c``, en el menu superior vas a ver un menu desplegable con un icono con una C y el nombre del archivo. Desplegas y elegís ``Flash con AVR Dude`` o lo que le hayas puesto al hacer el paso de ``Program External Tools``.
 
 Ahora, con un botón conectado a RST y GND del Adafruit ProMicro(ATmega32U4 16Mhz) lo presionas y acto seguido, pulsas el botón play al lado del martillo, el que tiene algo con rojo supongo una caja de herramientas, ese es el botón de Build&Flash con AVR Dude.
 
@@ -221,7 +221,7 @@ Como lo guarda con `.txt` por defecto, lo renombramos:
   ````
   notepad blink.c
   ````
-Escribinos:
+Escribimos:
 
   ````
   #include <avr/io.h>
