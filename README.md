@@ -1,12 +1,11 @@
-# c_avr_eclipse
-Usar Eclipse Sin AVR Plugin, con AVR toolchain actual, AVR Dude Actual, con make actual, extra sin Eclipse.
+# Usar Eclipse Sin AVR Plugin, con AVR toolchain actual, AVR Dude Actual, con make actual, extra sin Eclipse.
 
 # Requisitos:
-Webs:
-AVR Toolchain: [De Microchips](https://www.microchip.com/en-us/tools-resources/develop/microchip-studio/gcc-compilers)
-AVR Dude:[GitHub Zip usado: avrdude-v8.0-windows-mingw-x64](https://github.com/avrdudes/avrdude/releases)
-MSYS2: [Bajar .exe y seguir las instrucciones de la web](https://www.msys2.org/)
-Eclipse C/C++: [Elegir Eclipse IDE for C/C++ Developers](https://www.eclipse.org/downloads/packages/)
+## Webs:
+- AVR Toolchain: [De Microchips](https://www.microchip.com/en-us/tools-resources/develop/microchip-studio/gcc-compilers)
+- AVR Dude:[GitHub Zip usado: avrdude-v8.0-windows-mingw-x64](https://github.com/avrdudes/avrdude/releases)
+- MSYS2: [Bajar .exe y seguir las instrucciones de la web](https://www.msys2.org/)
+- Eclipse C/C++: [Elegir Eclipse IDE for C/C++ Developers](https://www.eclipse.org/downloads/packages/)
 
 ## Variables de entorno.
 
