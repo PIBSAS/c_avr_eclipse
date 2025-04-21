@@ -54,7 +54,7 @@ Selecciona en la ventana Select Variable ``COM_PORT`` que ahora estará y dale a
   - Pattern:
 
   ````
-  # Makefile para ATmega32U4 (Adafruit Pro Micro)
+  # Makefile para ATmega32U4 (Sparkfun Pro Micro)
   
   MCU = atmega32u4
   F_CPU = 16000000UL
@@ -143,7 +143,7 @@ Automáticamente el campo de texto en Use template cambiara a ``makefile``, pres
 
 El martillo construye, para construir y subir, enchufar el Atmega32U4, clic en el archivo ``.c``, en el menu superior vas a ver un menu desplegable con un icono con una C y el nombre del archivo. Desplegas y elegís ``Flash con AVR Dude`` o lo que le hayas puesto al hacer el paso de ``Program External Tools``.
 
-Ahora, con un botón conectado a RST y GND del Adafruit ProMicro(ATmega32U4 16Mhz) lo presionas y acto seguido, pulsas el botón play al lado del martillo, el que tiene algo con rojo supongo una caja de herramientas, ese es el botón de Build&Flash con AVR Dude.
+Ahora, con un botón conectado a RST y GND del Sparkfun ProMicro(ATmega32U4 16Mhz) lo presionas y acto seguido, pulsas el botón play al lado del martillo, el que tiene algo con rojo supongo una caja de herramientas, ese es el botón de Build&Flash con AVR Dude.
 
 # Si no ves algo asi:
   ````
@@ -171,7 +171,7 @@ Pulsas Si
 ## Pegas el contenido:
 
   ````
-  # Makefile para ATmega32u4 (Adafruit Pro Micro)
+  # Makefile para ATmega32u4 (Sparkfun Pro Micro)
   
   MCU = atmega32u4
   F_CPU = 16000000UL
@@ -228,7 +228,7 @@ Escribimos:
   #include <util/delay.h>
   
   int main(void) {
-      DDRD |= (1 << PD5); // Pin 9 en Pro Micro
+      DDRD |= (1 << PD5); // Pin 22 en Pro Micro
       while (1) {
           PORTD ^= (1 << PD5);
           _delay_ms(500);
@@ -250,3 +250,20 @@ Flasheamos(debemos apretar una vez el botón de reset sino falla):
   ````
 
 Listo, a estudiar!.
+
+
+# Datasheet:
+- [ATmega16u4/32U4](https://ww1.microchip.com/downloads/en/devicedoc/atmel-7766-8-bit-avr-atmega16u4-32u4_datasheet.pdf)
+
+
+# Pinout:
+![Pinout de la placa](Pinout_simple.png)
+
+-> Pinout Sparkfun Pro Micro <-
+
+![Pinout con Pines AVR](pro_micro_pinout.jpg)
+
+-> Pinout Sparkfun Pro Micro con Pines AVR PORTB, PORTC, PORTD, PORTE, PORTF <-
+
+![Pinout ATmega32U4](32U4PinMapping.png)
+-> Pinout ATmega32U4 con funciones de Arduino <-
