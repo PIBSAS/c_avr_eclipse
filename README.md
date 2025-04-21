@@ -253,7 +253,7 @@ Listo, a estudiar!.
 
 
 # Datasheet:
-- [ATmega16u4/32U4](https://ww1.microchip.com/downloads/en/devicedoc/atmel-7766-8-bit-avr-atmega16u4-32u4_datasheet.pdf)
+- <a href="https://ww1.microchip.com/downloads/en/devicedoc/atmel-7766-8-bit-avr-atmega16u4-32u4_datasheet.pdf" target="_blank">ATmega16u4/32U4</a>
 
 
 # Pinout:
