@@ -3,7 +3,7 @@
 # Requisitos:
 ## Webs:
 - AVR Toolchain: [De Microchips](https://www.microchip.com/en-us/tools-resources/develop/microchip-studio/gcc-compilers)
-- AVR Dude:[GitHub Zip usado: avrdude-v8.0-windows-mingw-x64](https://github.com/avrdudes/avrdude/releases)
+- AVR Dude: [GitHub Zip usado: avrdude-v8.0-windows-mingw-x64](https://github.com/avrdudes/avrdude/releases)
 - MSYS2: [Bajar .exe y seguir las instrucciones de la web](https://www.msys2.org/)
 - Eclipse C/C++: [Elegir Eclipse IDE for C/C++ Developers](https://www.eclipse.org/downloads/packages/)
 
@@ -257,13 +257,60 @@ Listo, a estudiar!.
 
 
 # Pinout:
-![Pinout de la placa](Pinout_simple.png)
-
--> Pinout Sparkfun Pro Micro <-
+<div style="text-align:center">
+  <img src="Pinout_simple.png" alt="Pinout Sparkfun Pro Micro">
+</div>
+<p align="center">Pinout Sparkfun Pro Micro</p>
 
 ![Pinout con Pines AVR](pro_micro_pinout.jpg)
+<div style="text-align:center">
+  <img src="pro_micro_pinout.jpg" alt="Pinout Sparkfun Pro Micro con Pines AVR PORTB, PORTC, PORTD, PORTE, PORTF">
+</div>
+<p align="center">Pinout Sparkfun Pro Micro con Pines AVR PORTB, PORTC, PORTD, PORTE, PORTF</p>
 
--> Pinout Sparkfun Pro Micro con Pines AVR PORTB, PORTC, PORTD, PORTE, PORTF <-
+<div style="text-align:center">
+  <img src="32U4PinMapping.png" alt="Pinout ATmega32U4 con funciones de Arduino">
+</div>
+<p align="center">Pinout ATmega32U4 con funciones de Arduino</p>
 
-![Pinout ATmega32U4](32U4PinMapping.png)
--> Pinout ATmega32U4 con funciones de Arduino <-
+
+# Tabla de compatibilidad de Pines:
+
+<table>
+  <thead>
+    <tr style="background-color: #00979D; color: white;">
+      <th>ATmega32U4</th>
+      <th>AVR</th>
+      <th>Arduino</th>
+      <th>Función</th>
+      <th>Descripción</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Pin 8</td><td>PB0</td><td>LED pin (left of crystal)</td><td><span style="text-decoration: overline;">SS</span>/PCINT0</td><td>SPI Slave Select input or Pin Change Interrupt 0</td></tr>
+    <tr><td>Pin 9</td><td>PB1</td><td>15</td><td>PCINT1/SCLK</td><td>SPI Bus Serial Clock or Pin Change Interrupt 1</td></tr>
+    <tr><td>Pin 10</td><td>PB2</td><td>16</td><td>PDI/PCINT2/MOSI</td><td>Programming Data Input or SPI Bus Master Output/Slave Input or Pin 
+Change Interrupt 2</td></tr>
+    <tr><td>Pin 11</td><td>PB3</td><td>14</td><td>PDO/PCINT3/MISO</td><td>Programming Data Output or SPI Bus Master Input/Slave Output or 
+Pin Change Interrupt 3</td></tr>
+    <tr><td>Pin 28</td><td>PB4</td><td>8</td><td>PCINT4/ADC11</td><td>Pin Change Interrupt 4 or Analog to Digital Converter channel 11</td></tr>
+    <tr><td>Pin 29</td><td>PB5</td><td>9</td><td>PCINT5/OC1A/PCINT5/<span style="text-decoration: overline;">OC.4B</span>
+ /ADC12</td><td>Output Compare and PWM Output A for Timer/Counter1 or 
+Pin Change Interrupt 5 or Timer 4 Complementary Output Compare B / PWM output or Analog to Digital Converter channel 12</td></tr>
+    <tr><td>Pin 30</td><td>PB6</td><td>10</td><td>PCINT6/OC1B/OC.4B/ADC13</td><td>Output Compare and PWM Output B for Timer/Counter1 or Pin Change Interrupt 6 or Timer 4 Output Compare B / PWM output or Analog to Digital Converter channel 13</td></tr>
+    <tr><td>Pin 31</td><td>PC6</td><td>5</td><td>OC3A/<span style="text-decoration: overline;">OC4A</span></td><td>Output Compare and PWM output A for Timer/Counter3 or Output Compare and complementary PWM output A for Timer 4</td></tr>
+    <tr><td>Pin 18</td><td>PD0</td><td>3</td><td>OC0B/SCL/<span style="text-decoration: overline;">INT0</span></td><td>External Interrupt0 Input or TWI Serial CLock or Output Compare for 
+Timer/Counter0</td></tr>
+    <tr><td>Pin 19</td><td>PD1</td><td>2</td><td>SDA/<span style="text-decoration: overline;">INT1</span></td><td>External Interrupt1 Input or TWI Serial DAta</td></tr>
+    <tr><td>Pin 20</td><td>PD2</td><td>RX1</td><td>RXD1/<span style="text-decoration: overline;">INT2</span></td><td>External Interrupt2 Input or USART1 Receive Pin</td></tr>
+    <tr><td>Pin 21</td><td>PD3</td><td>TX0</td><td>TXD1/<span style="text-decoration: overline;">INT3</span></td><td>External Interrupt3 Input or USART1 Transmit Pin</td></tr>
+    <tr><td>Pin 25</td><td>PD4</td><td>4</td><td>ICP1/ADC8</td><td>Timer/Counter1 Input Capture Trigger or Analog to Digital Converter channel 8</td></tr>
+    <tr><td>Pin 22</td><td>PD5</td><td>LED pin</td><td>XCK1/<span style="text-decoration: overline;">CTS</span></td><td>USART1 External Clock Input/Output or UART flow control CTS signal</td></td></tr>
+    <tr><td>Pin 27</td><td>PD7</td><td>6</td><td>T0/OC4D/ADC10</td><td>Timer/Counter 0 Clock Input or Timer 4 Output Compare D / PWM output or Analog to Digital Converter channel 10</td></tr>
+    <tr><td>Pin 1</td><td>PE6</td><td>7</td><td>INT6/AIN0</td><td>External Interrupt 6 Input or Analog Comparator Positive Input</td></tr>
+    <tr><td>Pin 39</td><td>PF4</td><td>A3</td><td>ADC4/TOK</td><td>ADC input channel 4 or JTAG Test ClocK</td></tr>
+    <tr><td>Pin 38</td><td>PF5</td><td>A2</td><td>ADC6/TMS</td><td>ADC input channel 5 or JTAG Test Mode Select</td></tr>
+    <tr><td>Pin 37</td><td>PF6</td><td>A1</td><td>ADC6/TDO</td><td>ADC input channel 6 or JTAG Test Data Output</td></tr>
+    <tr><td>Pin 36</td><td>PF7</td><td>A0</td><td>ADC7/TDI</td><td>ADC input channel 7 or JTAG Test Data Input</td></tr>
+  </tbody>
+</table>
