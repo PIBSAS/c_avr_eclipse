@@ -288,14 +288,13 @@ Listo, a estudiar!.
   </thead>
   <tbody>
     <tr><td>Pin 8</td><td>PB0</td><td>LED pin (left of crystal)</td><td><span style="text-decoration: overline;">SS</span>/PCINT0</td><td>SPI Slave Select input or Pin Change Interrupt 0</td></tr>
-    <tr><td>Pin 9</td><td>PB1</td><td>15</td><td>PCINT1/SCLK</td><td>SPI Bus Serial Clock or Pin Change Interrupt 1</td></tr>
+    <tr><td>Pin 9</td><td>PB1</td><td>15</td><td>PCINT1/SCK</td><td>SPI Bus Serial Clock or Pin Change Interrupt 1</td></tr>
     <tr><td>Pin 10</td><td>PB2</td><td>16</td><td>PDI/PCINT2/MOSI</td><td>Programming Data Input or SPI Bus Master Output/Slave Input or Pin 
 Change Interrupt 2</td></tr>
     <tr><td>Pin 11</td><td>PB3</td><td>14</td><td>PDO/PCINT3/MISO</td><td>Programming Data Output or SPI Bus Master Input/Slave Output or 
 Pin Change Interrupt 3</td></tr>
     <tr><td>Pin 28</td><td>PB4</td><td>8</td><td>PCINT4/ADC11</td><td>Pin Change Interrupt 4 or Analog to Digital Converter channel 11</td></tr>
-    <tr><td>Pin 29</td><td>PB5</td><td>9</td><td>PCINT5/OC1A/PCINT5/<span style="text-decoration: overline;">OC.4B</span>
- /ADC12</td><td>Output Compare and PWM Output A for Timer/Counter1 or 
+    <tr><td>Pin 29</td><td>PB5</td><td>9</td><td>PCINT5/OC1A/<span style="text-decoration: overline;">OC.4B</span>/ADC12</td><td>Output Compare and PWM Output A for Timer/Counter1 or 
 Pin Change Interrupt 5 or Timer 4 Complementary Output Compare B / PWM output or Analog to Digital Converter channel 12</td></tr>
     <tr><td>Pin 30</td><td>PB6</td><td>10</td><td>PCINT6/OC1B/OC.4B/ADC13</td><td>Output Compare and PWM Output B for Timer/Counter1 or Pin Change Interrupt 6 or Timer 4 Output Compare B / PWM output or Analog to Digital Converter channel 13</td></tr>
     <tr><td>Pin 31</td><td>PC6</td><td>5</td><td>OC3A/<span style="text-decoration: overline;">OC4A</span></td><td>Output Compare and PWM output A for Timer/Counter3 or Output Compare and complementary PWM output A for Timer 4</td></tr>
@@ -308,7 +307,7 @@ Timer/Counter0</td></tr>
     <tr><td>Pin 22</td><td>PD5</td><td>LED pin</td><td>XCK1/<span style="text-decoration: overline;">CTS</span></td><td>USART1 External Clock Input/Output or UART flow control CTS signal</td></td></tr>
     <tr><td>Pin 27</td><td>PD7</td><td>6</td><td>T0/OC4D/ADC10</td><td>Timer/Counter 0 Clock Input or Timer 4 Output Compare D / PWM output or Analog to Digital Converter channel 10</td></tr>
     <tr><td>Pin 1</td><td>PE6</td><td>7</td><td>INT6/AIN0</td><td>External Interrupt 6 Input or Analog Comparator Positive Input</td></tr>
-    <tr><td>Pin 39</td><td>PF4</td><td>A3</td><td>ADC4/TOK</td><td>ADC input channel 4 or JTAG Test ClocK</td></tr>
+    <tr><td>Pin 39</td><td>PF4</td><td>A3</td><td>ADC4/TCK</td><td>ADC input channel 4 or JTAG Test ClocK</td></tr>
     <tr><td>Pin 38</td><td>PF5</td><td>A2</td><td>ADC6/TMS</td><td>ADC input channel 5 or JTAG Test Mode Select</td></tr>
     <tr><td>Pin 37</td><td>PF6</td><td>A1</td><td>ADC6/TDO</td><td>ADC input channel 6 or JTAG Test Data Output</td></tr>
     <tr><td>Pin 36</td><td>PF7</td><td>A0</td><td>ADC7/TDI</td><td>ADC input channel 7 or JTAG Test Data Input</td></tr>
