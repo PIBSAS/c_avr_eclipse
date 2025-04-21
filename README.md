@@ -262,11 +262,12 @@ Listo, a estudiar!.
 </div>
 <p align="center">Pinout Sparkfun Pro Micro</p>
 
-![Pinout con Pines AVR](pro_micro_pinout.jpg)
+
 <div style="text-align:center">
   <img src="pro_micro_pinout.jpg" alt="Pinout Sparkfun Pro Micro con Pines AVR PORTB, PORTC, PORTD, PORTE, PORTF">
 </div>
 <p align="center">Pinout Sparkfun Pro Micro con Pines AVR PORTB, PORTC, PORTD, PORTE, PORTF</p>
+
 
 <div style="text-align:center">
   <img src="32U4PinMapping.png" alt="Pinout ATmega32U4 con funciones de Arduino">
@@ -304,7 +305,7 @@ Timer/Counter0</td></tr>
     <tr><td>Pin 20</td><td>PD2</td><td>RX1</td><td>RXD1/<span style="text-decoration: overline;">INT2</span></td><td>External Interrupt2 Input or USART1 Receive Pin</td></tr>
     <tr><td>Pin 21</td><td>PD3</td><td>TX0</td><td>TXD1/<span style="text-decoration: overline;">INT3</span></td><td>External Interrupt3 Input or USART1 Transmit Pin</td></tr>
     <tr><td>Pin 25</td><td>PD4</td><td>4</td><td>ICP1/ADC8</td><td>Timer/Counter1 Input Capture Trigger or Analog to Digital Converter channel 8</td></tr>
-    <tr><td>Pin 22</td><td>PD5</td><td>LED pin</td><td>XCK1/<span style="text-decoration: overline;">CTS</span></td><td>USART1 External Clock Input/Output or UART flow control CTS signal</td></td></tr>
+    <tr><td>Pin 22</td><td>PD5</td><td>LED pin</td><td>XCK1/<span style="text-decoration: overline;">CTS</span></td><td>USART1 External Clock Input/Output or UART flow control CTS signal</td></tr>
     <tr><td>Pin 27</td><td>PD7</td><td>6</td><td>T0/OC4D/ADC10</td><td>Timer/Counter 0 Clock Input or Timer 4 Output Compare D / PWM output or Analog to Digital Converter channel 10</td></tr>
     <tr><td>Pin 1</td><td>PE6</td><td>7</td><td>INT6/AIN0</td><td>External Interrupt 6 Input or Analog Comparator Positive Input</td></tr>
     <tr><td>Pin 39</td><td>PF4</td><td>A3</td><td>ADC4/TCK</td><td>ADC input channel 4 or JTAG Test ClocK</td></tr>
