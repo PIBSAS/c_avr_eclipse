@@ -323,6 +323,12 @@ Timer/Counter0</td></tr>
   - Instalar VSCode y las extensiones que normalmente te recomienda instalar, desde la Terminal(PowerShell):
 
   ````
+  winget install "Microsoft Visual Studio Code"
+  ````
+
+  Luego declaramos una variable con los ids de las extensiones:
+
+  ````
   $extensions = @("ms-vscode.cpptools", "ms-vscode.cpptools-extension-pack", "ms-vscode.cpptools-themes", "ms-vscode.cmake-tools", "ms-vscode.makefile-tools")
   ````
 
@@ -331,6 +337,9 @@ Timer/Counter0</td></tr>
   ````
   For ($i=0; $i -lt $extensions.Length; $i++) {code --install-extension $extensions[$i]}
   ````
+
+  listo VSCode.
+
 
 # Tendremos la siguiente estructura siempre, como haciamos en Eclipse, el nombre del proyecto dará nombre al ``.c``:
 
@@ -481,7 +490,7 @@ clean:
 
 
 # Automaticemos la creación de estos archivos:
-- Sin importar cual sea tu proyecto de C para AVR, se creara la estructura de archivos, la cual traas cargar VSCode podras correr usando el menu ``Terminal -> Run Task -> Flash Pro Micro``. Para esto, creamos un Script de Powershell, que pasandole el nombre del proyecto nos cree todo. Creamos un archivo de texto con extensión ``.ps1``.
+- Sin importar cual sea tu proyecto de C para AVR, se creara la estructura de archivos, la cual traas cargar VSCode podras correr usando el menu ``Terminal -> Run Task -> Compile & Flash (make flash)``. Para esto, creamos un Script de Powershell, que pasandole el nombre del proyecto nos cree todo. Creamos un archivo de texto con extensión ``.ps1``.
 
 ````
 notepad avr.ps1
