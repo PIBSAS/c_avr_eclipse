@@ -419,7 +419,7 @@ clean:
         "name": "Flash Pro Micro",
         "type": "cppdbg",
         "request": "launch",
-        "program": "${workspaceFolder}/${workspaceFolder}.elf",
+        "program": "${workspaceFolder}/${workspaceFolderBasename}.elf",
         "miDebuggerPath": "C:/avr-toolchain/bin/avr-gdb.exe",
         "preLaunchTask": "Flash (make flash)",
         "cwd": "${workspaceFolder}",
@@ -480,30 +480,185 @@ clean:
     ````
 
 
-# Pero no da andar copiando y pegando estas estructuras en cada proyecto, automaticemos:
-  - Vamos a ``File -> Prefences -> Configure Snippet`` . Elegimos ``C``. Se nos abre una pestaña ``c.json`` reemplazamos su contetnido con:
+# Automaticemos la creación de estos archivos:
+- Sin importar cual sea tu proyecto de C para AVR, se creara la estructura de archivos, la cual traas cargar VSCode podras correr usando el menu ``Terminal -> Run Task -> Flash Pro Micro``. Para esto, creamos un Script de Powershell, que pasandole el nombre del proyecto nos cree todo. Creamos un archivo de texto con extensión ``.ps1``.
 
+````
+notepad avr.ps1
+````
 
-  ````
-  {
-  	"Nuevo Proyecto C AVR": {
-  	  "prefix": "AVR C",  
-  	  "body": [
-  		"#include <avr/io.h>",
-  		"// Aquí puedes agregar cualquier otra librería que necesites",
-  		"",
-  		"int main(void) {",
-  		"    // Configuración del microcontrolador (pines, interrupciones, etc.)",
-  		"",
-  		"    while (1) {",
-  		"        // Lógica principal del programa",
-  		"    }",
-  		"",
-  		"    return 0;",
-  		"",
-  		"}"
-  	  ],
-  	  "description": "Plantilla para nuevo archivo C AVR"
-  	}
-  }
-  ````
+Pegamos el siguiente contenido:
+
+````
+# Verifica si se pasó un nombre de proyecto como argumento
+param (
+    [string]$P
+)
+
+if (-not $P) {
+    Write-Host "Por favor, proporciona un nombre de proyecto. Usando .\avr -P proyecto"
+    exit 1
+}
+
+# Crear la estructura de carpetas
+New-Item -Path $P -ItemType Directory
+New-Item -Path "$P\.vscode" -ItemType Directory
+
+# Crear el archivo principal .c con la plantilla básica
+$contenidoC = @'
+#include <avr/io.h>
+
+// Aquí puedes agregar cualquier otra librería que necesites
+
+int main(void) {
+    // Configuración del microcontrolador (pines, interrupciones, etc.)
+
+    while (1) {
+        // Lógica principal del programa
+    }
+
+    return 0;
+}
+'@
+Set-Content -Path "$P\$P.c" -Value $contenidoC
+
+# Crear el Makefile básico
+$contenidoMakefile = @'
+# Makefile para ATmega32U4 (Sparkfun Pro Micro) - Adaptado para VSCode + MSYS2
+
+MCU = atmega32u4
+F_CPU = 16000000UL
+BAUD = 57600
+PORT = COM10       # Cambiar al COM adecuado.
+
+CC = C:/avr-toolchain/bin/avr-gcc.exe
+OBJCOPY = C:/avr-toolchain/bin/avr-objcopy.exe
+OBJDUMP = C:/avr-toolchain/bin/avr-objdump.exe
+AVRDUDE = C:/avrdude/avrdude.exe
+
+CFLAGS = -Wall -Os -mmcu=$(MCU) -DF_CPU=$(F_CPU)
+LDFLAGS = -mmcu=$(MCU)
+
+ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+TARGET := $(notdir $(patsubst %/,%,${ROOT}))
+
+SRC = $(ROOT)$(TARGET).c
+OBJ = $(ROOT)$(TARGET).o
+
+all: $(TARGET).hex $(TARGET).map $(TARGET).lst
+
+$(TARGET).elf: $(OBJ)
+	$(CC) $(CFLAGS) -Wl,-Map=$(TARGET).map -o $@ $^
+
+$(OBJ): $(SRC)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(TARGET).hex: $(TARGET).elf
+	$(OBJCOPY) -O ihex -R .eeprom $< $@
+
+$(TARGET).lst: $(TARGET).elf
+	$(OBJDUMP) -d -S $< > $@
+
+flash: $(TARGET).hex
+	$(AVRDUDE) -v -p $(MCU) -c avr109 -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
+
+clean:
+	rm -f *.elf *.hex *.o *.map *.lst
+
+'@
+Set-Content -Path "$P\Makefile" -Value $contenidoMakefile
+
+# Crear archivo de configuración de VSCode (tasks.json)
+$contenidoTasksJson = @'
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build (make)",
+      "type": "shell",
+      "command": "C:/msys64/usr/bin/make.exe",
+      "args": [],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Compile & Flash (make flash)",
+      "type": "shell",
+      "command": "C:/msys64/usr/bin/make.exe",
+      "args": ["flash"],
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
+}
+'@
+Set-Content -Path "$P\.vscode\tasks.json" -Value $contenidoTasksJson
+
+# Crear archivo de configuración de VSCode (launch.json)
+$contenidoLaunchJson = @'
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Flash Pro Micro",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/${workspaceFolderBasename}.elf",
+      "miDebuggerPath": "C:/avr-toolchain/bin/avr-gdb.exe",
+      "preLaunchTask": "Compile & Flash (make flash)",
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false
+    }
+  ]
+}
+'@
+Set-Content -Path "$P\.vscode\launch.json" -Value $contenidoLaunchJson
+
+# Crear archivo de configuración de VSCode (c_cpp_properties.json)
+$contenidoCPropertiesJson = @'
+{
+  "configurations": [
+    {
+      "name": "AVR",
+      "includePath": [
+        "C:/avr-toolchain/avr/include",
+        "C:/avr-toolchain/lib/gcc/avr/7.3.0/include"
+      ],
+      "defines": ["F_CPU=16000000UL"],
+      "compilerPath": "C:/avr-toolchain/bin/avr-gcc.exe",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "windows-gcc-x64"
+    }
+  ],
+  "version": 4
+}
+'@
+Set-Content -Path "$P\.vscode\c_cpp_properties.json" -Value $contenidoCPropertiesJson
+
+Write-Host "Proyecto '$P' creado exitosamente."
+
+# Abrir el proyecto en VSCode
+Start-Process "code" -ArgumentList $P -WindowStyle Hidden
+````
+
+Guardamos, donde nos sea util. lo ejecutamos desde la Terminal, abriendo una donde se encuentre:
+
+````
+.\avr -P nombreProyecto
+````
+
+Esto creara la estructura de archivos:
+
+````
+nombreProyecto/
+├── nombreProyecto.c
+├── Makefile
+└── .vscode/
+    ├── launch.json
+    ├── tasks.json
+    └── c_cpp_properties.json
+
+````
+
+Y lo abrira en VSCode Listo para programar y flashear. La parte de DEBUG no funciona si no tenemos Hardware extra para hacer debug. Recordad que para solo compilar podemos correr la tarea: ``Terminal -> Run Task -> Build (make)`` [Atajo ``Ctrl+Shift+B``] y para Compilar y flashear: ``Terminal -> Run Task -> Compile & Flash (make flash)``
