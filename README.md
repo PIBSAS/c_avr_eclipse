@@ -314,3 +314,196 @@ Timer/Counter0</td></tr>
     <tr><td>Pin 36</td><td>PF7</td><td>A0</td><td>ADC7/TDI</td><td>ADC input channel 7 or JTAG Test Data Input</td></tr>
   </tbody>
 </table>
+
+
+
+# Con VSCode sin Plugins:
+  -  Aun no tendremos chequeo de sintaxis.
+  -  Mismos requisitos, AVR Toolchain, AVR Dude, Make a traves de MSYS2.
+  - Instalar VSCode y las extensiones que normalmente te recomienda instalar, desde la Terminal(PowerShell):
+
+  ````
+  $extensions = @("ms-vscode.cpptools", "ms-vscode.cpptools-extension-pack", "ms-vscode.cpptools-themes", "ms-vscode.cmake-tools", "ms-vscode.makefile-tools")
+  ````
+
+  - Un bucle for de PowerShell para que las instale:
+
+  ````
+  For ($i=0; $i -lt $extensions.Length; $i++) {code --install-extension $extensions[$i]}
+  ````
+
+# Tendremos la siguiente estructura siempre, como haciamos en Eclipse, el nombre del proyecto dará nombre al ``.c``:
+
+````
+ProjectProMicro/
+├── ProjectProMicro.c
+├── Makefile
+└── .vscode/
+    ├── launch.json
+    ├── tasks.json
+    └── c_cpp_properties.json
+````
+
+# Plantilla C:
+
+  ````
+    #include <avr/io.h>
+    // Aquí puedes agregar cualquier otra librería que necesites
+    
+    int main(void) {
+        // Configuración del microcontrolador (pines, interrupciones, etc.)
+    
+        while (1) {
+            // Lógica principal del programa
+        }
+    
+        return 0;
+    }
+  ````
+
+# Plantilla Makefile, recorda cambiar el puerto COM:
+
+````
+# Makefile para ATmega32U4 (Sparkfun Pro Micro) - Adaptado para VSCode + MSYS2
+
+MCU = atmega32u4
+F_CPU = 16000000UL
+BAUD = 57600
+PORT = COM10       # Usar: COM_PORT=COM4 make flash (sin $$)
+
+CC = C:/avr-toolchain/bin/avr-gcc.exe
+OBJCOPY = C:/avr-toolchain/bin/avr-objcopy.exe
+OBJDUMP = C:/avr-toolchain/bin/avr-objdump.exe
+AVRDUDE = C:/avrdude/avrdude.exe
+
+CFLAGS = -Wall -Os -mmcu=$(MCU) -DF_CPU=$(F_CPU)
+LDFLAGS = -mmcu=$(MCU)
+
+ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+TARGET := $(notdir $(patsubst %/,%,${ROOT}))
+
+SRC = $(ROOT)$(TARGET).c
+OBJ = $(ROOT)$(TARGET).o
+
+all: $(TARGET).hex $(TARGET).map $(TARGET).lst
+
+$(TARGET).elf: $(OBJ)
+	$(CC) $(CFLAGS) -Wl,-Map=$(TARGET).map -o $@ $^
+
+$(OBJ): $(SRC)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(TARGET).hex: $(TARGET).elf
+	$(OBJCOPY) -O ihex -R .eeprom $< $@
+
+$(TARGET).lst: $(TARGET).elf
+	$(OBJDUMP) -d -S $< > $@
+
+flash: $(TARGET).hex
+	$(AVRDUDE) -v -p $(MCU) -c avr109 -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
+
+clean:
+	rm -f *.elf *.hex *.o *.map *.lst
+````
+
+
+# Carpete .vscode:
+
+- launch.json:
+
+  ````
+  {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Flash Pro Micro",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${workspaceFolder}/${workspaceFolder}.elf",
+        "miDebuggerPath": "C:/avr-toolchain/bin/avr-gdb.exe",
+        "preLaunchTask": "Flash (make flash)",
+        "cwd": "${workspaceFolder}",
+        "stopAtEntry": false
+      }
+    ]
+  }
+  ````
+
+
+  - task.json:
+
+    ````
+    {
+      "version": "2.0.0",
+      "tasks": [
+        {
+          "label": "Build (make)",
+          "type": "shell",
+          "command": "C:/msys64/usr/bin/make.exe",
+          "args": [],
+          "group": { "kind": "build", "isDefault": true },
+          "problemMatcher": ["$gcc"]
+        },
+        {
+          "label": "Flash (make flash)",
+          "type": "shell",
+          "command": "C:/msys64/usr/bin/make.exe",
+          "args": ["flash"],
+          "group": "build",
+          "problemMatcher": []
+        }
+      ]
+    }
+    ````
+
+
+  - c_cpp_properties.json:
+
+    ````
+    {
+      "configurations": [
+        {
+          "name": "AVR",
+          "includePath": [
+            "C:/avr-toolchain/avr/include",
+            "C:/avr-toolchain/lib/gcc/avr/7.3.0/include"
+          ],
+          "defines": ["F_CPU=16000000UL"],
+          "compilerPath": "C:/avr-toolchain/bin/avr-gcc.exe",
+          "cStandard": "c11",
+          "cppStandard": "c++17",
+          "intelliSenseMode": "windows-gcc-x64"
+        }
+      ],
+      "version": 4
+    }
+    ````
+
+
+# Pero no da andar copiando y pegando estas estructuras en cada proyecto, automaticemos:
+  - Vamos a ``File -> Prefences -> Configure Snippet`` . Elegimos ``C``. Se nos abre una pestaña ``c.json`` reemplazamos su contetnido con:
+
+
+  ````
+  {
+  	"Nuevo Proyecto C AVR": {
+  	  "prefix": "AVR C",  
+  	  "body": [
+  		"#include <avr/io.h>",
+  		"// Aquí puedes agregar cualquier otra librería que necesites",
+  		"",
+  		"int main(void) {",
+  		"    // Configuración del microcontrolador (pines, interrupciones, etc.)",
+  		"",
+  		"    while (1) {",
+  		"        // Lógica principal del programa",
+  		"    }",
+  		"",
+  		"    return 0;",
+  		"",
+  		"}"
+  	  ],
+  	  "description": "Plantilla para nuevo archivo C AVR"
+  	}
+  }
+  ````
