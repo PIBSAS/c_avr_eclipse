@@ -416,7 +416,7 @@ clean:
 ````
 
 
-# Carpete .vscode:
+# Carpeta .vscode:
 
 - launch.json:
 
