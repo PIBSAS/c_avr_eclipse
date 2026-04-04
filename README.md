@@ -2,12 +2,24 @@
 
 # Requisitos:
 ## Webs:
-- AVR Toolchain: [De Microchips](https://www.microchip.com/en-us/tools-resources/develop/microchip-studio/gcc-compilers)
-- AVR Dude: [GitHub Zip usado: avrdude-v8.0-windows-mingw-x64](https://github.com/avrdudes/avrdude/releases)
-- MSYS2: [Bajar .exe y seguir las instrucciones de la web](https://www.msys2.org/)
+- AVR Toolchain para Windows: [De Microchips](https://www.microchip.com/en-us/tools-resources/develop/microchip-studio/gcc-compilers)
+- AVR Dude(Donde X.x sera la versión actual): [GitHub Zip usado: avrdude-vX.x-windows-mingw-x64](https://github.com/avrdudes/avrdude/releases)
+- MSYS2: [Bajar .exe, ejecutar, siguiente, cuando termina se abre una Terminal](https://www.msys2.org/)
+	- En ella escribir:
+ 		```
+   		pacman -Syu
+   		```
+   	- Luego:
+   	  	```
+   	   pacman -S make
+   	   ```
+- Si usas Vs Code o el bloc de notas, debes agregar las siguientes variables de entorno al sistema:
+  	- Para AVR-GCC, AVR-OBJCOPY y AVR-OBJDUMP: ``C:\avr-toolchain\bin``
+  	- Para flashear AVR DUDE: ``C:\avrdude\``
+  	- Para Make: ``C:\msys64\usr\bin``
 - Eclipse C/C++: [Elegir Eclipse IDE for C/C++ Developers](https://www.eclipse.org/downloads/packages/)
 
-## Variables de entorno.
+## Variables de entorno(Eclipse).
 
 - Menu ``Window -> Preferences -> C/C++ -> Build -> Environment``.
 - Boton Add..
@@ -216,7 +228,7 @@ Guardamos y cerramos.
 Como lo guarda con `.txt` por defecto, lo renombramos:
 - ``mv Makefile.txt Makefile``
 
-# Creamos el .c(aca no vamos a renombrar porque tiene extension):
+# Creamos el ``.c`` (aca no vamos a renombrar porque tiene extension):
 
   ````
   notepad blink.c
@@ -250,6 +262,24 @@ Flasheamos(debemos apretar una vez el botón de reset sino falla):
   ````
 
 Listo, a estudiar!.
+
+> :warning: **NOTA**: Tener en cuenta que en el Makefile cambiará las siguientes líneas:
+
+- `MCU = atmega32u4` Según el microcontrolador que sea puede ser atmega128, atmega328p por ejemplo, esto lo encontramos en device-specs en el Toolchain]
+- `F_CPU = 16000000UL` Segun el microcontolador que usemos, atmega128 8000000UL, atmega32p 16000000UL  
+- `COM_PORT = 10` Según el puerto de nuestra PC.
+- `$(AVRDUDE) -v -p $(MCU) -c avr109 -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i` La opción ``-c avr109`` varía según el micro y como se flashé, atmega128 ``-c usbasp``, atmega328p: ``-c arduino`` o ``-c stk500v1``.
+- Para conocer la constante del micro ver device-specs:
+	```
+   C:\avr-toolchain\lib\gcc\avr\X.x.y\device-specs
+	```
+   Veremos archivos:
+  ``specs-atmega128`` donde solo usaremos lo que diga tras ``specs-``
+- Para la frecuencia usamos el datasheet o el crystal que usemos.
+- Para saber que tipo de opcion de flashe soporta AVRDUDE podemos abrir una Terminal y ejecutar:
+  ```
+  avrdude -c ?
+  ```
 
 
 # Datasheet:
@@ -370,7 +400,8 @@ ProjectProMicro/
     }
   ````
 
-# Plantilla Makefile, recorda cambiar el puerto COM:
+# Plantilla Makefile:
+> ⚠️ Recorda cambiar el puerto COM, el MCU, F_CPU, chequear Paths de CC, OBJCOPY, OBJDUMP, AVRDUDE, y la opción -c Según el programador y micro que uses. Para la realización de la Plantilla.
 
 ````
 # Makefile para ATmega32U4 (Sparkfun Pro Micro) - Adaptado para VSCode + MSYS2
@@ -418,6 +449,8 @@ clean:
 
 # Carpeta .vscode:
 
+> ⚠️ Recorda editar NAME, chequea el PATH de AVR-GDB. Para la realización de la Plantilla
+
 - launch.json:
 
   ````
@@ -441,6 +474,8 @@ clean:
 
   - task.json:
 
+  > ⚠️ Recordá chequear PATH de MAKE. Para la realización de la Plantilla.
+  
     ````
     {
       "version": "2.0.0",
@@ -468,6 +503,8 @@ clean:
 
   - c_cpp_properties.json:
 
+	> ⚠️ Recordá chequear F_CPU, PATHS y Versiones de AVR. Para la realización de la Plantilla.
+ 
     ````
     {
       "configurations": [
@@ -475,7 +512,7 @@ clean:
           "name": "AVR",
           "includePath": [
             "C:/avr-toolchain/avr/include",
-            "C:/avr-toolchain/lib/gcc/avr/7.3.0/include"
+            "C:/avr-toolchain/lib/gcc/avr/15.1.0/include"
           ],
           "defines": ["F_CPU=16000000UL"],
           "compilerPath": "C:/avr-toolchain/bin/avr-gcc.exe",
@@ -631,7 +668,7 @@ $contenidoCPropertiesJson = @'
       "name": "AVR",
       "includePath": [
         "C:/avr-toolchain/avr/include",
-        "C:/avr-toolchain/lib/gcc/avr/7.3.0/include"
+        "C:/avr-toolchain/lib/gcc/avr/15.1.0/include"
       ],
       "defines": ["F_CPU=16000000UL"],
       "compilerPath": "C:/avr-toolchain/bin/avr-gcc.exe",
@@ -657,7 +694,7 @@ Guardamos, donde nos sea util. lo ejecutamos desde la Terminal, abriendo una don
 .\avr -P nombreProyecto
 ````
 
-Esto creara la estructura de archivos:
+Esto creará la estructura de archivos:
 
 ````
 nombreProyecto/
@@ -671,3 +708,343 @@ nombreProyecto/
 ````
 
 Y lo abrira en VSCode Listo para programar y flashear. La parte de DEBUG no funciona si no tenemos Hardware extra para hacer debug. Recordad que para solo compilar podemos correr la tarea: ``Terminal -> Run Task -> Build (make)`` [Atajo ``Ctrl+Shift+B``] y para Compilar y flashear: ``Terminal -> Run Task -> Compile & Flash (make flash)``
+
+---
+
+# Scripts extras:
+
+## Para Atmega128:
+
+````
+notepad avr128.ps1
+````
+
+Pegamos el siguiente contenido:
+
+````
+# Verifica si se pasó un nombre de proyecto como argumento
+param (
+    [string]$P
+)
+
+if (-not $P) {
+    Write-Host "Por favor, proporciona un nombre de proyecto. Usando .\avr128 -P proyecto"
+    exit 1
+}
+
+# Crear la estructura de carpetas
+New-Item -Path $P -ItemType Directory
+New-Item -Path "$P\.vscode" -ItemType Directory
+
+# Crear el archivo principal .c con la plantilla básica
+$contenidoC = @'
+#include <avr/io.h>
+
+// Aquí puedes agregar cualquier otra librería que necesites
+
+int main(void) {
+    // Configuración del microcontrolador (pines, interrupciones, etc.)
+
+    while (1) {
+        // Lógica principal del programa
+    }
+
+    return 0;
+}
+'@
+Set-Content -Path "$P\$P.c" -Value $contenidoC
+
+# Crear el Makefile básico
+$contenidoMakefile = @'
+# Makefile para ATmega128 - Adaptado para VSCode + MSYS2
+
+MCU = atmega128
+F_CPU = 8000000UL
+BAUD = 57600
+PORT = COM10       # Cambiar al COM adecuado.
+
+CC = C:/avr-toolchain/bin/avr-gcc.exe
+OBJCOPY = C:/avr-toolchain/bin/avr-objcopy.exe
+OBJDUMP = C:/avr-toolchain/bin/avr-objdump.exe
+AVRDUDE = C:/avrdude/avrdude.exe
+
+CFLAGS = -Wall -Os -mmcu=$(MCU) -DF_CPU=$(F_CPU)
+LDFLAGS = -mmcu=$(MCU)
+
+ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+TARGET := $(notdir $(patsubst %/,%,${ROOT}))
+
+SRC = $(ROOT)$(TARGET).c
+OBJ = $(ROOT)$(TARGET).o
+
+all: $(TARGET).hex $(TARGET).map $(TARGET).lst
+
+$(TARGET).elf: $(OBJ)
+	$(CC) $(CFLAGS) -Wl,-Map=$(TARGET).map -o $@ $^
+
+$(OBJ): $(SRC)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(TARGET).hex: $(TARGET).elf
+	$(OBJCOPY) -O ihex -R .eeprom $< $@
+
+$(TARGET).lst: $(TARGET).elf
+	$(OBJDUMP) -d -S $< > $@
+
+flash: $(TARGET).hex
+	$(AVRDUDE) -v -p $(MCU) -c usbasp -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
+
+clean:
+	rm -f *.elf *.hex *.o *.map *.lst
+
+'@
+Set-Content -Path "$P\Makefile" -Value $contenidoMakefile
+
+# Crear archivo de configuración de VSCode (tasks.json)
+$contenidoTasksJson = @'
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build (make)",
+      "type": "shell",
+      "command": "C:/msys64/usr/bin/make.exe",
+      "args": [],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Compile & Flash (make flash)",
+      "type": "shell",
+      "command": "C:/msys64/usr/bin/make.exe",
+      "args": ["flash"],
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
+}
+'@
+Set-Content -Path "$P\.vscode\tasks.json" -Value $contenidoTasksJson
+
+# Crear archivo de configuración de VSCode (launch.json)
+$contenidoLaunchJson = @'
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Flash ATmega128",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/${workspaceFolderBasename}.elf",
+      "miDebuggerPath": "C:/avr-toolchain/bin/avr-gdb.exe",
+      "preLaunchTask": "Compile & Flash (make flash)",
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false
+    }
+  ]
+}
+'@
+Set-Content -Path "$P\.vscode\launch.json" -Value $contenidoLaunchJson
+
+# Crear archivo de configuración de VSCode (c_cpp_properties.json)
+$contenidoCPropertiesJson = @'
+{
+  "configurations": [
+    {
+      "name": "AVR",
+      "includePath": [
+        "C:/avr-toolchain/avr/include",
+        "C:/avr-toolchain/lib/gcc/avr/15.1.0/include"
+      ],
+      "defines": ["F_CPU=8000000UL"],
+      "compilerPath": "C:/avr-toolchain/bin/avr-gcc.exe",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "windows-gcc-x64"
+    }
+  ],
+  "version": 4
+}
+'@
+Set-Content -Path "$P\.vscode\c_cpp_properties.json" -Value $contenidoCPropertiesJson
+
+Write-Host "Proyecto '$P' creado exitosamente."
+
+# Abrir el proyecto en VSCode
+Start-Process "code" -ArgumentList $P -WindowStyle Hidden
+````
+
+Guardamos, donde nos sea util. lo ejecutamos desde la Terminal, abriendo una donde se encuentre:
+
+````
+.\avr128.ps1 -P nombreProyecto
+````
+
+----
+
+## Para Atmega328:
+
+````
+notepad avr328.ps1
+````
+
+Pegamos el siguiente contenido:
+
+````
+# Verifica si se pasó un nombre de proyecto como argumento
+param (
+    [string]$P
+)
+
+if (-not $P) {
+    Write-Host "Por favor, proporciona un nombre de proyecto. Usando .\avr328 -P proyecto"
+    exit 1
+}
+
+# Crear la estructura de carpetas
+New-Item -Path $P -ItemType Directory
+New-Item -Path "$P\.vscode" -ItemType Directory
+
+# Crear el archivo principal .c con la plantilla básica
+$contenidoC = @'
+#include <avr/io.h>
+
+// Aquí puedes agregar cualquier otra librería que necesites
+
+int main(void) {
+    // Configuración del microcontrolador (pines, interrupciones, etc.)
+
+    while (1) {
+        // Lógica principal del programa
+    }
+
+    return 0;
+}
+'@
+Set-Content -Path "$P\$P.c" -Value $contenidoC
+
+# Crear el Makefile básico
+$contenidoMakefile = @'
+# Makefile para ATmega328p - Adaptado para VSCode + MSYS2
+
+MCU = atmega328p
+F_CPU = 16000000UL
+BAUD = 57600
+PORT = COM10       # Cambiar al COM adecuado.
+
+CC = C:/avr-toolchain/bin/avr-gcc.exe
+OBJCOPY = C:/avr-toolchain/bin/avr-objcopy.exe
+OBJDUMP = C:/avr-toolchain/bin/avr-objdump.exe
+AVRDUDE = C:/avrdude/avrdude.exe
+
+CFLAGS = -Wall -Os -mmcu=$(MCU) -DF_CPU=$(F_CPU)
+LDFLAGS = -mmcu=$(MCU)
+
+ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+TARGET := $(notdir $(patsubst %/,%,${ROOT}))
+
+SRC = $(ROOT)$(TARGET).c
+OBJ = $(ROOT)$(TARGET).o
+
+all: $(TARGET).hex $(TARGET).map $(TARGET).lst
+
+$(TARGET).elf: $(OBJ)
+	$(CC) $(CFLAGS) -Wl,-Map=$(TARGET).map -o $@ $^
+
+$(OBJ): $(SRC)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(TARGET).hex: $(TARGET).elf
+	$(OBJCOPY) -O ihex -R .eeprom $< $@
+
+$(TARGET).lst: $(TARGET).elf
+	$(OBJDUMP) -d -S $< > $@
+
+flash: $(TARGET).hex
+	$(AVRDUDE) -v -p $(MCU) -c arduino -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
+
+clean:
+	rm -f *.elf *.hex *.o *.map *.lst
+
+'@
+Set-Content -Path "$P\Makefile" -Value $contenidoMakefile
+
+# Crear archivo de configuración de VSCode (tasks.json)
+$contenidoTasksJson = @'
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build (make)",
+      "type": "shell",
+      "command": "C:/msys64/usr/bin/make.exe",
+      "args": [],
+      "group": { "kind": "build", "isDefault": true },
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Compile & Flash (make flash)",
+      "type": "shell",
+      "command": "C:/msys64/usr/bin/make.exe",
+      "args": ["flash"],
+      "group": "build",
+      "problemMatcher": []
+    }
+  ]
+}
+'@
+Set-Content -Path "$P\.vscode\tasks.json" -Value $contenidoTasksJson
+
+# Crear archivo de configuración de VSCode (launch.json)
+$contenidoLaunchJson = @'
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Flash ATmega328",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/${workspaceFolderBasename}.elf",
+      "miDebuggerPath": "C:/avr-toolchain/bin/avr-gdb.exe",
+      "preLaunchTask": "Compile & Flash (make flash)",
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false
+    }
+  ]
+}
+'@
+Set-Content -Path "$P\.vscode\launch.json" -Value $contenidoLaunchJson
+
+# Crear archivo de configuración de VSCode (c_cpp_properties.json)
+$contenidoCPropertiesJson = @'
+{
+  "configurations": [
+    {
+      "name": "AVR",
+      "includePath": [
+        "C:/avr-toolchain/avr/include",
+        "C:/avr-toolchain/lib/gcc/avr/15.1.0/include"
+      ],
+      "defines": ["F_CPU=16000000UL"],
+      "compilerPath": "C:/avr-toolchain/bin/avr-gcc.exe",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "windows-gcc-x64"
+    }
+  ],
+  "version": 4
+}
+'@
+Set-Content -Path "$P\.vscode\c_cpp_properties.json" -Value $contenidoCPropertiesJson
+
+Write-Host "Proyecto '$P' creado exitosamente."
+
+# Abrir el proyecto en VSCode
+Start-Process "code" -ArgumentList $P -WindowStyle Hidden
+````
+
+Guardamos, donde nos sea util. lo ejecutamos desde la Terminal, abriendo una donde se encuentre:
+
+````
+.\avr328.ps1 -P nombreProyecto
+````
