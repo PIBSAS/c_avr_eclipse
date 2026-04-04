@@ -72,6 +72,7 @@ Selecciona en la ventana Select Variable ``COM_PORT`` que ahora estará y dale a
   F_CPU = 16000000UL
   BAUD = 57600
   PORT = $${COM_PORT}        # Usa la variable de entorno COM_PORT
+  PROGRAMMER = avr109
   
   CC = avr-gcc
   OBJCOPY = avr-objcopy
@@ -99,7 +100,7 @@ Selecciona en la ventana Select Variable ``COM_PORT`` que ahora estará y dale a
   	$${OBJCOPY} -O ihex -R .eeprom $$< $$@
   
   flash: $${ROOT}$${TARGET}.hex
-  	$${AVRDUDE} -v -p $${MCU} -c avr109 -P $${PORT} -b $${BAUD} -D -U flash:w:$${ROOT}$${TARGET}.hex:i
+  	$${AVRDUDE} -v -p $${MCU} -c $(PROGRAMMER) -P $${PORT} -b $${BAUD} -D -U flash:w:$${ROOT}$${TARGET}.hex:i
   
   clean:
   	del /Q *.elf *.hex *.o 2>nul || rm -f *.elf *.hex *.o
@@ -190,7 +191,8 @@ Pulsas Si
   BAUD = 57600
   COM_PORT = 10                      # Cambiá esto por el número correcto si varía
   PORT = COM${COM_PORT}             # COM10 → COM${COM_PORT}
-  
+  PROGRAMMER = avr109
+
   CC = avr-gcc
   OBJCOPY = avr-objcopy
   AVRDUDE = avrdude
@@ -217,7 +219,7 @@ Pulsas Si
   	$(OBJCOPY) -O ihex -R .eeprom $< $@
   
   flash: $(TARGET).hex
-  	$(AVRDUDE) -v -p $(MCU) -c avr109 -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
+  	$(AVRDUDE) -v -p $(MCU) -c $(PROGRAMMER) -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
   
   clean:
   	del /Q *.elf *.hex *.o 2>nul || rm -f *.elf *.hex *.o
@@ -268,7 +270,7 @@ Listo, a estudiar!.
 - `MCU = atmega32u4` Según el microcontrolador que sea puede ser atmega128, atmega328p por ejemplo, esto lo encontramos en device-specs en el Toolchain]
 - `F_CPU = 16000000UL` Segun el microcontolador que usemos, atmega128 8000000UL, atmega32p 16000000UL  
 - `COM_PORT = 10` Según el puerto de nuestra PC.
-- `$(AVRDUDE) -v -p $(MCU) -c avr109 -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i` La opción ``-c avr109`` varía según el micro y como se flashé, atmega128 ``-c usbasp``, atmega328p: ``-c arduino`` o ``-c stk500v1``.
+- `PROGRAMMER = avr109` La opción ``avr109`` varía según el micro y como se flashé, atmega128: ``usbasp``, atmega328p: ``arduino`` o ``stk500v1``.
 - Para conocer la constante del micro ver device-specs:
 	```
    C:\avr-toolchain\lib\gcc\avr\X.x.y\device-specs
@@ -401,7 +403,7 @@ ProjectProMicro/
   ````
 
 # Plantilla Makefile:
-> ⚠️ Recorda cambiar el puerto COM, el MCU, F_CPU, chequear Paths de CC, OBJCOPY, OBJDUMP, AVRDUDE, y la opción -c Según el programador y micro que uses. Para la realización de la Plantilla.
+> ⚠️ Recorda cambiar el puerto COM, el MCU, F_CPU, el PROGRAMMER, chequear Paths de CC, OBJCOPY, OBJDUMP, AVRDUDE. Según el programador y micro que uses. Para la realización de la Plantilla.
 
 ````
 # Makefile para ATmega32U4 (Sparkfun Pro Micro) - Adaptado para VSCode + MSYS2
@@ -410,6 +412,7 @@ MCU = atmega32u4
 F_CPU = 16000000UL
 BAUD = 57600
 PORT = COM10       # Usar: COM_PORT=COM4 make flash (sin $$)
+PROGRAMMER = avr109
 
 CC = C:/avr-toolchain/bin/avr-gcc.exe
 OBJCOPY = C:/avr-toolchain/bin/avr-objcopy.exe
@@ -440,7 +443,7 @@ $(TARGET).lst: $(TARGET).elf
 	$(OBJDUMP) -d -S $< > $@
 
 flash: $(TARGET).hex
-	$(AVRDUDE) -v -p $(MCU) -c avr109 -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
+	$(AVRDUDE) -v -p $(MCU) -c $(PROGRAMMER) -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
 
 clean:
 	rm -f *.elf *.hex *.o *.map *.lst
@@ -576,6 +579,7 @@ MCU = atmega32u4
 F_CPU = 16000000UL
 BAUD = 57600
 PORT = COM10       # Cambiar al COM adecuado.
+PROGRAMMER = avr109
 
 CC = C:/avr-toolchain/bin/avr-gcc.exe
 OBJCOPY = C:/avr-toolchain/bin/avr-objcopy.exe
@@ -606,7 +610,7 @@ $(TARGET).lst: $(TARGET).elf
 	$(OBJDUMP) -d -S $< > $@
 
 flash: $(TARGET).hex
-	$(AVRDUDE) -v -p $(MCU) -c avr109 -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
+	$(AVRDUDE) -v -p $(MCU) -c $(PROGRAMMER) -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
 
 clean:
 	rm -f *.elf *.hex *.o *.map *.lst
@@ -762,6 +766,7 @@ MCU = atmega128
 F_CPU = 8000000UL
 BAUD = 57600
 PORT = COM10       # Cambiar al COM adecuado.
+PROGRAMMER = usbasp
 
 CC = C:/avr-toolchain/bin/avr-gcc.exe
 OBJCOPY = C:/avr-toolchain/bin/avr-objcopy.exe
@@ -792,7 +797,7 @@ $(TARGET).lst: $(TARGET).elf
 	$(OBJDUMP) -d -S $< > $@
 
 flash: $(TARGET).hex
-	$(AVRDUDE) -v -p $(MCU) -c usbasp -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
+	$(AVRDUDE) -v -p $(MCU) -c $(PROGRAMMER) -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
 
 clean:
 	rm -f *.elf *.hex *.o *.map *.lst
@@ -931,6 +936,7 @@ MCU = atmega328p
 F_CPU = 16000000UL
 BAUD = 57600
 PORT = COM10       # Cambiar al COM adecuado.
+PROGRAMMER = arduino
 
 CC = C:/avr-toolchain/bin/avr-gcc.exe
 OBJCOPY = C:/avr-toolchain/bin/avr-objcopy.exe
@@ -961,7 +967,7 @@ $(TARGET).lst: $(TARGET).elf
 	$(OBJDUMP) -d -S $< > $@
 
 flash: $(TARGET).hex
-	$(AVRDUDE) -v -p $(MCU) -c arduino -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
+	$(AVRDUDE) -v -p $(MCU) -c $(PROGRAMMER) -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
 
 clean:
 	rm -f *.elf *.hex *.o *.map *.lst
@@ -1048,3 +1054,114 @@ Guardamos, donde nos sea util. lo ejecutamos desde la Terminal, abriendo una don
 ````
 .\avr328.ps1 -P nombreProyecto
 ````
+
+---
+
+# Mode ultra ñoño:
+
+Instalamos AVR Toolchain, AVR Dude, Make con MSYS2 y agregamos todo a las variables de entorno.
+
+## Abrimos la Terminal en dónde tengamos nuestra carpeta que contendrá nuestros diversos proyectos y escribimos los siguienter comandos:
+````
+mkdir proyecto_01
+cd Proyecto_01
+touch Makefile
+touch proyecto_01.c
+notepad proyecto_01.c
+````
+Lo que hicimos es crear un directorio, entrar en él, crear los dos archivos y abrir uno de ellos con el editor de texto, si queremos usar vscode como editor se indica ``code proyecto_01.c``
+
+### Pegamos o escribimos la plantilla de C:
+
+ ````
+    #include <avr/io.h>
+    // Aquí puedes agregar cualquier otra librería que necesites
+    
+    int main(void) {
+        // Configuración del microcontrolador (pines, interrupciones, etc.)
+    
+        while (1) {
+            // Lógica principal del programa
+        }
+    
+        return 0;
+    }
+  ````
+
+Guardamos y salimos.
+
+## Abrimos Makefile
+
+````
+notepad Makefile
+````
+
+### Pegamos o escribimos la plantilla de Makefile:
+
+````
+# Makefile para ATmega32U4 (Sparkfun Pro Micro) - Adaptado para VSCode + MSYS2
+
+MCU = atmega32u4
+F_CPU = 16000000UL
+BAUD = 57600
+PORT = COM10       # Usar: COM_PORT=COM4 make flash (sin $$)
+PROGRAMMER = avr109
+
+CC = C:/avr-toolchain/bin/avr-gcc.exe
+OBJCOPY = C:/avr-toolchain/bin/avr-objcopy.exe
+OBJDUMP = C:/avr-toolchain/bin/avr-objdump.exe
+AVRDUDE = C:/avrdude/avrdude.exe
+
+CFLAGS = -Wall -Os -mmcu=$(MCU) -DF_CPU=$(F_CPU)
+LDFLAGS = -mmcu=$(MCU)
+
+ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+TARGET := $(notdir $(patsubst %/,%,${ROOT}))
+
+SRC = $(ROOT)$(TARGET).c
+OBJ = $(ROOT)$(TARGET).o
+
+all: $(TARGET).hex $(TARGET).map $(TARGET).lst
+
+$(TARGET).elf: $(OBJ)
+	$(CC) $(CFLAGS) -Wl,-Map=$(TARGET).map -o $@ $^
+
+$(OBJ): $(SRC)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(TARGET).hex: $(TARGET).elf
+	$(OBJCOPY) -O ihex -R .eeprom $< $@
+
+$(TARGET).lst: $(TARGET).elf
+	$(OBJDUMP) -d -S $< > $@
+
+flash: $(TARGET).hex
+	$(AVRDUDE) -v -p $(MCU) -c $(PROGRAMMER) -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
+
+clean:
+	rm -f *.elf *.hex *.o *.map *.lst
+````
+
+Guadamos sin extensión, si la agrega luego renombramos el archivo eliminando la extensión, se puede hacer con:
+
+````
+mv Makefil.txt Makefile
+````
+
+### Luego queda compilar:
+````
+make
+````
+
+### O compilar y flashear:
+````
+make flash
+````
+
+### Si debemos modificar el código de `C` limpiamos el build realizado con:
+````
+make clean
+````
+Y volvemos a ejecutar make o make flash.
+
+> ⚠️ Si queremos utilizar VsCode como editor de texto, solo abrimos la terminal con ``Ctrl + ñ`` y luego introducimos los mismos comandos de compilación o compilación y flasheo, y el de limpieza del build.
