@@ -1165,3 +1165,197 @@ make clean
 Y volvemos a ejecutar make o make flash.
 
 > ⚠️ Si queremos utilizar VsCode como editor de texto, solo abrimos la terminal con ``Ctrl + ñ`` y luego introducimos los mismos comandos de compilación o compilación y flasheo, y el de limpieza del build.
+
+---
+# Script mejorado se editan variables de PowerShell y listo, el resto del script no se toca:
+
+- Agrega Tareas de make, make flash, make clean que deben llamarse desde ``Ctrl+Shift+P`` escribir ``Run Task`` y elegir make, make flash o make clean. Si no aparecen
+  volver a presionar ``Ctrl+Shift+P`` escribir ``Reload Window`` y dar enter, al recargar repetir Run Task y aparecerá.
+
+  Los campos a modificar en el Script son:
+  ```
+  ####################################################
+  # Modificar las siguientes variables según el micro
+  $MCU = "atmega328"
+  $F_CPU = "16000000UL"
+  $PORT = "COM10"
+  $BAUD = "57600"
+  $PROGRAMMER = "arduino"
+  ####################################################
+  ```
+  El resto no se toca!
+
+
+````
+# Verifica si se pasó un nombre de proyecto como argumento
+param (
+    [string]$P
+)
+
+if (-not $P) {
+    Write-Host "Por favor, proporciona un nombre de proyecto. Usando .\avr328 -P proyecto"
+    exit 1
+}
+
+####################################################
+# Modificar las siguientes variables según el micro
+$MCU = "atmega328"
+$F_CPU = "16000000UL"
+$PORT = "COM10"
+$BAUD = "57600"
+$PROGRAMMER = "arduino"
+####################################################
+
+# Crear la estructura de carpetas
+New-Item -Path $P -ItemType Directory
+New-Item -Path "$P\.vscode" -ItemType Directory
+
+# Crear el archivo principal .c con la plantilla básica
+$contenidoC = @'
+#include <avr/io.h>
+
+// Aquí puedes agregar cualquier otra librería que necesites
+
+int main(void) {
+    // Configuración del microcontrolador (pines, interrupciones, etc.)
+
+    while (1) {
+        // Lógica principal del programa
+    }
+
+    return 0;
+}
+'@
+Set-Content -Path "$P\$P.c" -Value $contenidoC
+
+# Crear el Makefile básico
+$contenidoMakefile = @'
+# Makefile para {{MCU}} - Adaptado para VSCode + MSYS2
+
+MCU = {{MCU}}
+F_CPU = {{F_CPU}}
+BAUD = {{BAUD}}
+PORT = {{PORT}}
+PROGRAMMER = {{PROGRAMMER}}
+
+CC = avr-gcc
+OBJCOPY = avr-objcopy
+OBJDUMP = avr-objdump
+AVRDUDE = avrdude
+
+CFLAGS = -Wall -Os -mmcu=$(MCU) -DF_CPU=$(F_CPU)
+LDFLAGS = -mmcu=$(MCU)
+
+ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+TARGET := $(notdir $(patsubst %/,%,${ROOT}))
+
+SRC = $(ROOT)$(TARGET).c
+OBJ = $(ROOT)$(TARGET).o
+
+all: $(TARGET).hex $(TARGET).map $(TARGET).lst
+
+$(TARGET).elf: $(OBJ)
+	$(CC) $(CFLAGS) -Wl,-Map=$(TARGET).map -o $@ $^
+
+$(OBJ): $(SRC)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(TARGET).hex: $(TARGET).elf
+	$(OBJCOPY) -O ihex -R .eeprom $< $@
+
+$(TARGET).lst: $(TARGET).elf
+	$(OBJDUMP) -d -S $< > $@
+
+flash: $(TARGET).hex
+	$(AVRDUDE) -v -p $(MCU) -c $(PROGRAMMER) -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
+
+clean:
+	rm -f *.elf *.hex *.o *.map *.lst
+
+'@
+$contenidoMakefile = $contenidoMakefile.Replace("{{MCU}}", $MCU)
+$contenidoMakefile = $contenidoMakefile.Replace("{{F_CPU}}", $F_CPU)
+$contenidoMakefile = $contenidoMakefile.Replace("{{BAUD}}", $BAUD)
+$contenidoMakefile = $contenidoMakefile.Replace("{{PORT}}", $PORT)
+$contenidoMakefile = $contenidoMakefile.Replace("{{PROGRAMMER}}", $PROGRAMMER)
+
+# Guardar Makefile
+Set-Content -Path "$P\Makefile" -Value $contenidoMakefile
+
+# Crear archivo de configuración de VSCode (tasks.json)
+$contenidoTasksJson = @'
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "make",
+      "type": "shell",
+      "command": "make",
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "make flash",
+      "type": "shell",
+      "command": "make flash"
+    },
+    {
+      "label": "make clean",
+      "type": "shell",
+      "command": "make clean"
+    }
+  ]
+}
+'@
+Set-Content -Path "$P\.vscode\tasks.json" -Value $contenidoTasksJson
+
+# Crear archivo de configuración de VSCode (launch.json)
+$contenidoLaunchJson = @'
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug ELF",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/${workspaceFolderBasename}.elf",
+      "miDebuggerPath": "avr-gdb",
+      "preLaunchTask": "make",
+      "cwd": "${workspaceFolder}",
+      "stopAtEntry": false
+    }
+  ]
+}
+'@
+Set-Content -Path "$P\.vscode\launch.json" -Value $contenidoLaunchJson
+
+# Crear archivo de configuración de VSCode (c_cpp_properties.json)
+$contenidoCPropertiesJson = @"
+{
+  "configurations": [
+    {
+      "name": "AVR",
+      "includePath": [
+        "`${workspaceFolder}/**"
+      ],
+      "defines": ["F_CPU=$F_CPU"],
+      "compilerPath": "avr-gcc",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "gcc-x64",
+      "compilerArgs": [
+        "-mmcu=$MCU"
+      ]
+    }
+  ],
+  "version": 4
+}
+"@
+Set-Content -Path "$P\.vscode\c_cpp_properties.json" -Value $contenidoCPropertiesJson
+
+Write-Host "Proyecto '$P' creado exitosamente."
+
+# Abrir el proyecto en VSCode
+Start-Process "code" -ArgumentList $P -WindowStyle Hidden
+````
+
+Guardar script con un nombre estilo ``avr.ps1`` y ejecutar como antes con ``.\avr -P Ejercicio01``
