@@ -521,7 +521,7 @@ Timer/Counter0</td></tr>
 &#x251C;&#x2500;&#x2500; &#x1F4C4;Makefile
 &#x2514;&#x2500;&#x2500; &#x1F4C1;.vscode/
 	&#x251C;&#x2500;&#x2500; &#x1F4C4;launch.json
-	&#x251C;&#x2500;&#x2500; &#x1F4C4;tasks.json
+    &#x251C;&#x2500;&#x2500; &#x1F4C4;tasks.json
 	&#x2514;&#x2500;&#x2500; &#x1F4C1;c_cpp_properties.json
 </pre>
 </div>
