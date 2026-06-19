@@ -1057,7 +1057,7 @@ Guardamos, donde nos sea util. lo ejecutamos desde la Terminal, abriendo una don
 
 ---
 
-# Mode ultra ñoño:
+# Modo ultra ñoño:
 
 Instalamos AVR Toolchain, AVR Dude, Make con MSYS2 y agregamos todo a las variables de entorno.
 
