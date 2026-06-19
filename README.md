@@ -515,15 +515,15 @@ Timer/Counter0</td></tr>
 # Tendremos la siguiente estructura siempre, como haciamos en Eclipse, el nombre del proyecto dará nombre al ``.c``:
 
 <div>
-	<pre>
-	&#x1F4C1; ProjectProMicro/
-	&#x251C;&#x2500;&#x2500; &#x1F4C4;ProjectProMicro.c
-    &#x251C;&#x2500;&#x2500; &#x1F4C4;Makefile
-    &#x2514;&#x2500;&#x2500; &#x1F4C1;.vscode/
-        &#x251C;&#x2500;&#x2500; &#x1F4C4;launch.json
-        &#x251C;&#x2500;&#x2500; &#x1F4C4;tasks.json
-        &#x2514;&#x2500;&#x2500; &#x1F4C1;c_cpp_properties.json
-	</pre>
+<pre>
+&#x1F4C1; ProjectProMicro/
+&#x251C;&#x2500;&#x2500; &#x1F4C4;ProjectProMicro.c
+&#x251C;&#x2500;&#x2500; &#x1F4C4;Makefile
+&#x2514;&#x2500;&#x2500; &#x1F4C1;.vscode/
+	&#x251C;&#x2500;&#x2500; &#x1F4C4;launch.json
+	&#x251C;&#x2500;&#x2500; &#x1F4C4;tasks.json
+	&#x2514;&#x2500;&#x2500; &#x1F4C1;c_cpp_properties.json
+</pre>
 </div>
 
 # Plantilla C:
@@ -843,15 +843,15 @@ Guardamos, donde nos sea util. lo ejecutamos desde la Terminal, abriendo una don
 Esto creará la estructura de archivos:
 
 <div>
-	<pre>
-	&#x1F4C1; nombreProyecto/
-	&#x251C;&#x2500;&#x2500; &#x1F4C4;nombreProyecto.c
-    &#x251C;&#x2500;&#x2500; &#x1F4C4;Makefile
-    &#x2514;&#x2500;&#x2500; &#x1F4C1;.vscode/
-        &#x251C;&#x2500;&#x2500; &#x1F4C4;launch.json
-        &#x251C;&#x2500;&#x2500; &#x1F4C4;tasks.json
-        &#x2514;&#x2500;&#x2500; &#x1F4C1;c_cpp_properties.json
-	</pre>
+<pre>
+&#x1F4C1; nombreProyecto/
+&#x251C;&#x2500;&#x2500; &#x1F4C4;nombreProyecto.c
+&#x251C;&#x2500;&#x2500; &#x1F4C4;Makefile
+&#x2514;&#x2500;&#x2500; &#x1F4C1;.vscode/
+	&#x251C;&#x2500;&#x2500; &#x1F4C4;launch.json
+	&#x251C;&#x2500;&#x2500; &#x1F4C4;tasks.json
+	&#x2514;&#x2500;&#x2500; &#x1F4C1;c_cpp_properties.json
+</pre>
 </div>
 
 Y lo abrira en VSCode Listo para programar y flashear. La parte de DEBUG no funciona si no tenemos Hardware extra para hacer debug. Recordad que para solo compilar podemos correr la tarea: ``Terminal -> Run Task -> Build (make)`` [Atajo ``Ctrl+Shift+B``] y para Compilar y flashear: ``Terminal -> Run Task -> Compile & Flash (make flash)``
