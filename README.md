@@ -30,6 +30,7 @@ Obviamente, descomprimiste AVR Toolchain y la renombras a avr-toolchain y la peg
 
 Botones Apply y Apply & Close según corresponda.
 
+---
 
 # Crear Menu para flashear:
 
@@ -57,6 +58,7 @@ Pero borra ``${COM_PORT}`` y colocate justo después de la palabra COM, Presiona
 
 Selecciona en la ventana Select Variable ``COM_PORT`` que ahora estará y dale a OK, esto dejara la lineal de comando tal cual la presentamos arriba. Dale a Ok.
 
+---
 
 # Hacer Templates para Makefile y C:
 
@@ -130,6 +132,7 @@ Regresar al mismo menu pero elegir `C Source File -> Default C source template`,
     ```
 Ok. aca pueden agregar más includes, esto es lo mínimo que cualquier programa tendrá.
 
+---
 
 # Como empezar, tras todo eso?.
 
@@ -145,6 +148,8 @@ Cerras y abris Eclipse.
 Es decir debe tener el mismo nombre que tu proyecto/SourceFolder, ya que la automatización que metimos te ayuda en eso. Sino deberías configurar cada proyecto de forma diferente.
 
 - Template: Como esta!, Para eso la modificamos!.
+
+---
 
 ## Ahora el Makefile:
 
@@ -170,6 +175,7 @@ Ahora, con un botón conectado a RST y GND del Sparkfun ProMicro(ATmega32U4 16Mh
   ```
 La placa no entro en modo bootloader, reintentar.
 
+---
 
 # MODO ÑOÑO: C y Makefile con Bloc de Notas y Terminal.
 
@@ -265,6 +271,8 @@ Flasheamos(debemos apretar una vez el botón de reset sino falla):
   make flash
   ```
 
+---
+
 # MODO ÑOÑO: S y Makefile con Bloc de notas y Terminal
 
 - Clic Nueva Carpeta
@@ -324,7 +332,6 @@ Pulsas Si
   ```
 
 Guardamos y cerramos.
-
 
 Como lo guarda con `.txt` por defecto, lo renombramos:
 - ``mv Makefile.txt Makefile``
@@ -386,6 +393,8 @@ Flasheamos(debemos apretar una vez el botón de reset sino falla, luego ya no ha
 
 Listo, a estudiar!.
 
+---
+
 > :warning: **NOTA**: Tener en cuenta que en el Makefile cambiará las siguientes líneas:
 
 - `MCU = atmega32u4` Según el microcontrolador que sea puede ser atmega128, atmega328p por ejemplo, esto lo encontramos en device-specs en el Toolchain]
@@ -407,29 +416,35 @@ Listo, a estudiar!.
   avrdude -c ?
   ```
 
+---
 
 # Datasheet:
 - <a href="https://ww1.microchip.com/downloads/en/devicedoc/atmel-7766-8-bit-avr-atmega16u4-32u4_datasheet.pdf" target="_blank">ATmega16u4/32U4</a>
 
+---
 
 # Pinout:
+
 <div align="center">
   <img src="Pinout_simple.png" alt="Pinout Sparkfun Pro Micro">
 </div>
 <p align="center">Pinout Sparkfun Pro Micro</p>
 
+---
 
 <div align="center">
   <img src="pro_micro_pinout.jpg" alt="Pinout Sparkfun Pro Micro con Pines AVR PORTB, PORTC, PORTD, PORTE, PORTF">
 </div>
 <p align="center">Pinout Sparkfun Pro Micro con Pines AVR PORTB, PORTC, PORTD, PORTE, PORTF</p>
 
+---
 
 <div align="center">
   <img src="32U4PinMapping.png" alt="Pinout ATmega32U4 con funciones de Arduino">
 </div>
 <p align="center">Pinout ATmega32U4 con funciones de Arduino</p>
 
+---
 
 # Tabla de compatibilidad de Pines:
 
@@ -471,7 +486,7 @@ Timer/Counter0</td></tr>
   </tbody>
 </table>
 
-
+---
 
 # Con VSCode sin Plugins:
   -  Aun no tendremos chequeo de sintaxis.
@@ -654,6 +669,7 @@ clean:
     }
     ```
 
+---
 
 # Automaticemos la creación de estos archivos:
 - Sin importar cual sea tu proyecto de C para AVR, se creara la estructura de archivos, la cual traas cargar VSCode podras correr usando el menu ``Terminal -> Run Task -> Compile & Flash (make flash)``. Para esto, creamos un Script de Powershell, que pasandole el nombre del proyecto nos cree todo. Creamos un archivo de texto con extensión ``.ps1``.
@@ -1300,6 +1316,7 @@ Y volvemos a ejecutar make o make flash.
 > ⚠️ Si queremos utilizar VsCode como editor de texto, solo abrimos la terminal con ``Ctrl + ñ`` y luego introducimos los mismos comandos de compilación o compilación y flasheo, y el de limpieza del build.
 
 ---
+
 # Script mejorado se editan variables de PowerShell y listo, el resto del script no se toca:
 
 - Agrega Tareas de make, make flash, make clean que deben llamarse desde ``Ctrl+Shift+P`` escribir ``Run Task`` y elegir make, make flash o make clean. Si no aparecen
@@ -1494,3 +1511,6 @@ Start-Process "code" -ArgumentList $P -WindowStyle Hidden
 ```
 
 Guardar script con un nombre estilo ``avr.ps1`` y ejecutar como antes con ``.\avr -P Ejercicio01``
+
+---
+
