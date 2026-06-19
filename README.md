@@ -263,56 +263,60 @@ Flasheamos(debemos apretar una vez el botón de reset sino falla):
   make flash
   ````
 
+# MODO ÑOÑO: S y Makefile con Bloc de notas y Terminal
+
 - Clic Nueva Carpeta
-Le pones el nombre del `archivo.c`, no importa donde lo hagas. Entras y abris la Terminal desde ahi Clic derecho Abrir Terminal.
+Le pones el nombre del `archivo.S` (ej: `blink.S` Carpeta `blink`), no importa donde lo hagas. Entras y abris la Terminal desde ahi Clic derecho Abrir Terminal.
   
-  ````
+  ````powershell
   notepad Makefile
   ````
 Pulsas Si
 
 ## Pegas el contenido:
 
-  ````
-  # Makefile para ATmega32u4 (Sparkfun Pro Micro)
-  
-  MCU = atmega32u4
+  ````Makefile
+  # Makefile para ATmega328p (Arduino Nano V3) - Adaptado para VSCode + MSYS2
+
+  MCU = atmega328p
   F_CPU = 16000000UL
   BAUD = 57600
-  COM_PORT = 10                      # Cambiá esto por el número correcto si varía
-  PORT = COM${COM_PORT}             # COM10 → COM${COM_PORT}
-  PROGRAMMER = avr109
+  PORT = ch340       # Usar: COM_PORT=COM4. La opcion ch340 como puerto, evita cambios futuros
+  PROGRAMMER = arduino # O stk500v1 ambos funcionan
 
-  CC = avr-gcc
-  OBJCOPY = avr-objcopy
-  AVRDUDE = avrdude
-  
+  CC = C:/avr-toolchain/bin/avr-gcc.exe # Se continua usando avr-gcc podria usarse avr-as.exe
+  OBJCOPY = C:/avr-toolchain/bin/avr-objcopy.exe
+  OBJDUMP = C:/avr-toolchain/bin/avr-objdump.exe
+  AVRDUDE = C:/avrdude/avrdude.exe
+
   CFLAGS = -Wall -Os -mmcu=$(MCU) -DF_CPU=$(F_CPU)
   LDFLAGS = -mmcu=$(MCU)
-  
-  # Detecta automáticamente el nombre del proyecto según la carpeta actual
+
   ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-  TARGET := $(notdir $(patsubst %/,%,$(ROOT)))
-  
-  SRC = $(TARGET).c
-  OBJ = $(TARGET).o
-  
-  all: $(TARGET).hex
-  
+  TARGET := $(notdir $(patsubst %/,%,${ROOT}))
+
+  SRC = $(ROOT)$(TARGET).S # Esta linea cambio .c por .S respecto al Makefile de C
+  OBJ = $(ROOT)$(TARGET).o
+
+  all: $(TARGET).hex $(TARGET).map $(TARGET).lst
+
   $(TARGET).elf: $(OBJ)
-  	$(CC) $(CFLAGS) -o $@ $^
-  
+	  $(CC) $(CFLAGS) -Wl,-Map=$(TARGET).map -o $@ $^
+
   $(OBJ): $(SRC)
-  	$(CC) $(CFLAGS) -c $< -o $@
-  
+	  $(CC) $(CFLAGS) -x assembler-with-cpp -c $< -o $@ # Aca se agrego -x assembler-with-cpp
+
   $(TARGET).hex: $(TARGET).elf
-  	$(OBJCOPY) -O ihex -R .eeprom $< $@
-  
+	  $(OBJCOPY) -O ihex -R .eeprom $< $@
+
+  $(TARGET).lst: $(TARGET).elf
+	  $(OBJDUMP) -d -S $< > $@
+
   flash: $(TARGET).hex
-  	$(AVRDUDE) -v -p $(MCU) -c $(PROGRAMMER) -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
-  
+	  $(AVRDUDE) -v -p $(MCU) -c $(PROGRAMMER) -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
+
   clean:
-  	del /Q *.elf *.hex *.o 2>nul || rm -f *.elf *.hex *.o
+	  rm -f *.elf *.hex *.o *.map *.lst
   ````
 
 Guardamos y cerramos.
@@ -320,11 +324,12 @@ Guardamos y cerramos.
 Como lo guarda con `.txt` por defecto, lo renombramos:
 - ``mv Makefile.txt Makefile``
 
-# Creamos el ``.c`` (aca no vamos a renombrar porque tiene extension):
+# Creamos el ``.S`` (aca no vamos a renombrar porque tiene extension):
 
   ````
   notepad blink.S
   ````
+
 Escribimos:
 
   ````
@@ -332,7 +337,7 @@ Escribimos:
 
   main:
       ldi r16, 0b00100000
-      out 0x04, r16        ; DDRB5 = salida
+      out 0x04, r16        ; DDRB5 = salida Pin D13 Led integrado
 
   loop:
       in r17, 0x05         ; leer PORTB
@@ -367,7 +372,7 @@ Guardamos y cerramos
   make
   ````
 
-Flasheamos(debemos apretar una vez el botón de reset sino falla):
+Flasheamos(debemos apretar una vez el botón de reset sino falla, luego ya no hace falta):
 
   ````
   make flash
@@ -379,7 +384,7 @@ Listo, a estudiar!.
 
 - `MCU = atmega32u4` Según el microcontrolador que sea puede ser atmega128, atmega328p por ejemplo, esto lo encontramos en device-specs en el Toolchain]
 - `F_CPU = 16000000UL` Segun el microcontolador que usemos, atmega128 8000000UL, atmega32p 16000000UL  
-- `COM_PORT = 10` Según el puerto de nuestra PC.
+- `COM_PORT = 10` Según el puerto de nuestra PC. Se puede poner ch340 en el caso de Arduino Nano V3.
 - `PROGRAMMER = avr109` La opción ``avr109`` varía según el micro y como se flashé, atmega128: ``usbasp``, atmega328p: ``arduino`` o ``stk500v1``.
 - Para conocer la constante del micro ver device-specs:
 	```
