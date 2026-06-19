@@ -171,7 +171,7 @@ Ahora, con un botón conectado a RST y GND del Sparkfun ProMicro(ATmega32U4 16Mh
 La placa no entro en modo bootloader, reintentar.
 
 
-# MODO ÑOÑO: Bloc de Notas y Terminal.
+# MODO ÑOÑO: C y Makefile con Bloc de Notas y Terminal.
 
 - Clic Nueva Carpeta
 Le pones el nombre del `archivo.c`, no importa donde lo hagas. Entras y abris la Terminal desde ahi Clic derecho Abrir Terminal.
@@ -257,6 +257,116 @@ Guardamos y cerramos
   ````
   make
   ````
+Flasheamos(debemos apretar una vez el botón de reset sino falla):
+
+  ````
+  make flash
+  ````
+
+- Clic Nueva Carpeta
+Le pones el nombre del `archivo.c`, no importa donde lo hagas. Entras y abris la Terminal desde ahi Clic derecho Abrir Terminal.
+  
+  ````
+  notepad Makefile
+  ````
+Pulsas Si
+
+## Pegas el contenido:
+
+  ````
+  # Makefile para ATmega32u4 (Sparkfun Pro Micro)
+  
+  MCU = atmega32u4
+  F_CPU = 16000000UL
+  BAUD = 57600
+  COM_PORT = 10                      # Cambiá esto por el número correcto si varía
+  PORT = COM${COM_PORT}             # COM10 → COM${COM_PORT}
+  PROGRAMMER = avr109
+
+  CC = avr-gcc
+  OBJCOPY = avr-objcopy
+  AVRDUDE = avrdude
+  
+  CFLAGS = -Wall -Os -mmcu=$(MCU) -DF_CPU=$(F_CPU)
+  LDFLAGS = -mmcu=$(MCU)
+  
+  # Detecta automáticamente el nombre del proyecto según la carpeta actual
+  ROOT := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+  TARGET := $(notdir $(patsubst %/,%,$(ROOT)))
+  
+  SRC = $(TARGET).c
+  OBJ = $(TARGET).o
+  
+  all: $(TARGET).hex
+  
+  $(TARGET).elf: $(OBJ)
+  	$(CC) $(CFLAGS) -o $@ $^
+  
+  $(OBJ): $(SRC)
+  	$(CC) $(CFLAGS) -c $< -o $@
+  
+  $(TARGET).hex: $(TARGET).elf
+  	$(OBJCOPY) -O ihex -R .eeprom $< $@
+  
+  flash: $(TARGET).hex
+  	$(AVRDUDE) -v -p $(MCU) -c $(PROGRAMMER) -P $(PORT) -b $(BAUD) -D -U flash:w:$(TARGET).hex:i
+  
+  clean:
+  	del /Q *.elf *.hex *.o 2>nul || rm -f *.elf *.hex *.o
+  ````
+
+Guardamos y cerramos.
+
+Como lo guarda con `.txt` por defecto, lo renombramos:
+- ``mv Makefile.txt Makefile``
+
+# Creamos el ``.c`` (aca no vamos a renombrar porque tiene extension):
+
+  ````
+  notepad blink.S
+  ````
+Escribimos:
+
+  ````
+  .global main
+
+  main:
+      ldi r16, 0b00100000
+      out 0x04, r16        ; DDRB5 = salida
+
+  loop:
+      in r17, 0x05         ; leer PORTB
+      ldi r18, 0b00100000
+      eor r17, r18         ; toggle PB5
+      out 0x05, r17
+
+      rcall delay
+      rjmp loop
+
+  delay:
+      ldi r18, 200
+  1:
+      ldi r19, 200
+  2:
+      ldi r20, 200
+  3:
+      dec r20
+      brne 3b
+      dec r19
+      brne 2b
+      dec r18
+      brne 1b
+      ret  
+  ````
+
+Guardamos y cerramos
+
+# Compilamos:
+
+  ````
+  make
+  ````
+
 Flasheamos(debemos apretar una vez el botón de reset sino falla):
 
   ````
