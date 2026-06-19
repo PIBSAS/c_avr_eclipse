@@ -1145,7 +1145,7 @@ clean:
 Guadamos sin extensión, si la agrega luego renombramos el archivo eliminando la extensión, se puede hacer con:
 
 ````
-mv Makefil.txt Makefile
+mv Makefile.txt Makefile
 ````
 
 ### Luego queda compilar:
