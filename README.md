@@ -6,11 +6,11 @@
 - AVR Dude(Donde X.x sera la versión actual): [GitHub Zip usado: avrdude-vX.x-windows-mingw-x64](https://github.com/avrdudes/avrdude/releases)
 - MSYS2: [Bajar .exe, ejecutar, siguiente, cuando termina se abre una Terminal](https://www.msys2.org/)
 	- En ella escribir:
- 		```
+ 		```bash
    		pacman -Syu
    		```
    	- Luego:
-   	  	```
+   	  	```bash
    	   pacman -S make
    	   ```
 - Si usas Vs Code o el bloc de notas, debes agregar las siguientes variables de entorno al sistema:
@@ -44,9 +44,9 @@ Botones Apply y Apply & Close según corresponda.
 
   - Arguments: 
 
-    ````
+    ```c
     -p m32u4 -c avr109 -P COM${COM_PORT}  -b 57600 -D -U flash:w:${project_name}.hex:i
-    ````
+    ```
 
 Pero borra ``${COM_PORT}`` y colocate justo después de la palabra COM, Presiona el Botón ``Variables``, luego ``Edit Variables``, en la ventana presiona ``New``:
 
@@ -65,7 +65,7 @@ Selecciona en la ventana Select Variable ``COM_PORT`` que ahora estará y dale a
   - Description: ``Makefile template para ATmega32U4``
   - Pattern:
 
-  ````
+  ```makefile
   # Makefile para ATmega32U4 (Sparkfun Pro Micro)
   
   MCU = atmega32u4
@@ -104,7 +104,7 @@ Selecciona en la ventana Select Variable ``COM_PORT`` que ahora estará y dale a
   
   clean:
   	del /Q *.elf *.hex *.o 2>nul || rm -f *.elf *.hex *.o
-  ````
+  ```
 
 Luego presionar los botones:
 - Apply, Apply & Close.
@@ -114,7 +114,7 @@ Regresar al mismo menu pero elegir `C Source File -> Default C source template`,
 
 - Description: dejar así.
 - Pattern:
-    ````
+    ```c
     #include <avr/io.h>
     // Aquí puedes agregar cualquier otra librería que necesites
     
@@ -127,7 +127,7 @@ Regresar al mismo menu pero elegir `C Source File -> Default C source template`,
     
         return 0;
     }
-    ````
+    ```
 Ok. aca pueden agregar más includes, esto es lo mínimo que cualquier programa tendrá.
 
 
@@ -159,7 +159,7 @@ El martillo construye, para construir y subir, enchufar el Atmega32U4, clic en e
 Ahora, con un botón conectado a RST y GND del Sparkfun ProMicro(ATmega32U4 16Mhz) lo presionas y acto seguido, pulsas el botón play al lado del martillo, el que tiene algo con rojo supongo una caja de herramientas, ese es el botón de Build&Flash con AVR Dude.
 
 # Si no ves algo asi:
-  ````
+  ```bash
   Reading 202 bytes for flash from input file trending.hex
   Writing 202 bytes to flash
   Writing | ################################################## | 100% 0.02s
@@ -167,7 +167,7 @@ Ahora, con un botón conectado a RST y GND del Sparkfun ProMicro(ATmega32U4 16Mh
   202 bytes of flash verified
   
   Avrdude done.  Thank you.
-  ````
+  ```
 La placa no entro en modo bootloader, reintentar.
 
 
@@ -176,14 +176,14 @@ La placa no entro en modo bootloader, reintentar.
 - Clic Nueva Carpeta
 Le pones el nombre del `archivo.c`, no importa donde lo hagas. Entras y abris la Terminal desde ahi Clic derecho Abrir Terminal.
   
-  ````
+  ```powershell
   notepad Makefile
-  ````
+  ```
 Pulsas Si
 
 ## Pegas el contenido:
 
-  ````
+  ```makefile
   # Makefile para ATmega32u4 (Sparkfun Pro Micro)
   
   MCU = atmega32u4
@@ -223,7 +223,7 @@ Pulsas Si
   
   clean:
   	del /Q *.elf *.hex *.o 2>nul || rm -f *.elf *.hex *.o
-  ````
+  ```
 
 Guardamos y cerramos.
 
@@ -232,12 +232,13 @@ Como lo guarda con `.txt` por defecto, lo renombramos:
 
 # Creamos el ``.c`` (aca no vamos a renombrar porque tiene extension):
 
-  ````
+  ```powershell
   notepad blink.c
-  ````
+  ```
+
 Escribimos:
 
-  ````
+  ```c
   #include <avr/io.h>
   #include <util/delay.h>
   
@@ -248,34 +249,37 @@ Escribimos:
           _delay_ms(500);
       }
   }
-  ````
+  ```
 
 Guardamos y cerramos
 
 # Compilamos:
 
-  ````
+  ```cmake
   make
-  ````
+  ```
+
 Flasheamos(debemos apretar una vez el botón de reset sino falla):
 
-  ````
+  ```cmake
   make flash
-  ````
+  ```
 
 # MODO ÑOÑO: S y Makefile con Bloc de notas y Terminal
 
 - Clic Nueva Carpeta
 Le pones el nombre del `archivo.S` (ej: `blink.S` Carpeta `blink`), no importa donde lo hagas. Entras y abris la Terminal desde ahi Clic derecho Abrir Terminal.
   
-  ````powershell
+  ```powershell
   notepad Makefile
-  ````
+  ```
+
 Pulsas Si
+
 
 ## Pegas el contenido:
 
-  ````Makefile
+  ```makefile
   # Makefile para ATmega328p (Arduino Nano V3) - Adaptado para VSCode + MSYS2
 
   MCU = atmega328p
@@ -317,22 +321,23 @@ Pulsas Si
 
   clean:
 	  rm -f *.elf *.hex *.o *.map *.lst
-  ````
+  ```
 
 Guardamos y cerramos.
+
 
 Como lo guarda con `.txt` por defecto, lo renombramos:
 - ``mv Makefile.txt Makefile``
 
 # Creamos el ``.S`` (aca no vamos a renombrar porque tiene extension):
 
-  ````
+  ```powershell
   notepad blink.S
-  ````
+  ```
 
 Escribimos:
 
-  ````
+  ```asm
   .global main
 
   main:
@@ -362,21 +367,22 @@ Escribimos:
       dec r18
       brne 1b
       ret  
-  ````
+  ```
 
 Guardamos y cerramos
 
+
 # Compilamos:
 
-  ````
+  ```cmake
   make
-  ````
+  ```
 
 Flasheamos(debemos apretar una vez el botón de reset sino falla, luego ya no hace falta):
 
-  ````
+  ```cmake
   make flash
-  ````
+  ```
 
 Listo, a estudiar!.
 
@@ -387,14 +393,17 @@ Listo, a estudiar!.
 - `COM_PORT = 10` Según el puerto de nuestra PC. Se puede poner ch340 en el caso de Arduino Nano V3.
 - `PROGRAMMER = avr109` La opción ``avr109`` varía según el micro y como se flashé, atmega128: ``usbasp``, atmega328p: ``arduino`` o ``stk500v1``.
 - Para conocer la constante del micro ver device-specs:
-	```
+  
+	```powershell
    C:\avr-toolchain\lib\gcc\avr\X.x.y\device-specs
 	```
-   Veremos archivos:
+
+  Veremos archivos:
   ``specs-atmega128`` donde solo usaremos lo que diga tras ``specs-``
 - Para la frecuencia usamos el datasheet o el crystal que usemos.
 - Para saber que tipo de opcion de flashe soporta AVRDUDE podemos abrir una Terminal y ejecutar:
-  ```
+
+  ```powershell
   avrdude -c ?
   ```
 
@@ -404,19 +413,19 @@ Listo, a estudiar!.
 
 
 # Pinout:
-<div style="text-align:center">
+<div align="center">
   <img src="Pinout_simple.png" alt="Pinout Sparkfun Pro Micro">
 </div>
 <p align="center">Pinout Sparkfun Pro Micro</p>
 
 
-<div style="text-align:center">
+<div align="center">
   <img src="pro_micro_pinout.jpg" alt="Pinout Sparkfun Pro Micro con Pines AVR PORTB, PORTC, PORTD, PORTE, PORTF">
 </div>
 <p align="center">Pinout Sparkfun Pro Micro con Pines AVR PORTB, PORTC, PORTD, PORTE, PORTF</p>
 
 
-<div style="text-align:center">
+<div align="center">
   <img src="32U4PinMapping.png" alt="Pinout ATmega32U4 con funciones de Arduino">
 </div>
 <p align="center">Pinout ATmega32U4 con funciones de Arduino</p>
@@ -469,40 +478,42 @@ Timer/Counter0</td></tr>
   -  Mismos requisitos, AVR Toolchain, AVR Dude, Make a traves de MSYS2.
   - Instalar VSCode y las extensiones que normalmente te recomienda instalar, desde la Terminal(PowerShell):
 
-  ````
+  ```powershell
   winget install "Microsoft Visual Studio Code"
-  ````
+  ```
 
   Luego declaramos una variable con los ids de las extensiones:
 
-  ````
+  ```powershell
   $extensions = @("ms-vscode.cpptools", "ms-vscode.cpptools-extension-pack", "ms-vscode.cpptools-themes", "ms-vscode.cmake-tools", "ms-vscode.makefile-tools")
-  ````
+  ```
 
   - Un bucle for de PowerShell para que las instale:
 
-  ````
+  ```powershell
   For ($i=0; $i -lt $extensions.Length; $i++) {code --install-extension $extensions[$i]}
-  ````
+  ```
 
   listo VSCode.
 
 
 # Tendremos la siguiente estructura siempre, como haciamos en Eclipse, el nombre del proyecto dará nombre al ``.c``:
 
-````
-ProjectProMicro/
-├── ProjectProMicro.c
-├── Makefile
-└── .vscode/
-    ├── launch.json
-    ├── tasks.json
-    └── c_cpp_properties.json
-````
+<div>
+	<pre>
+	&#x1F4C1; ProjectProMicro/
+	&#x251C;&#x2500;&#x2500; &#x1F4C4;ProjectProMicro.c
+    &#x251C;&#x2500;&#x2500; &#x1F4C4;Makefile
+    &#x2514;&#x2500;&#x2500; &#x1F4C1;.vscode/
+        &#x251C;&#x2500;&#x2500; &#x1F4C4;launch.json
+        &#x251C;&#x2500;&#x2500; &#x1F4C4;tasks.json
+        &#x2514;&#x2500;&#x2500; &#x1F4C1;c_cpp_properties.json
+	</pre>
+</div>
 
 # Plantilla C:
 
-  ````
+  ```c
     #include <avr/io.h>
     // Aquí puedes agregar cualquier otra librería que necesites
     
@@ -515,12 +526,12 @@ ProjectProMicro/
     
         return 0;
     }
-  ````
+  ```
 
 # Plantilla Makefile:
 > ⚠️ Recorda cambiar el puerto COM, el MCU, F_CPU, el PROGRAMMER, chequear Paths de CC, OBJCOPY, OBJDUMP, AVRDUDE. Según el programador y micro que uses. Para la realización de la Plantilla.
 
-````
+```makefile
 # Makefile para ATmega32U4 (Sparkfun Pro Micro) - Adaptado para VSCode + MSYS2
 
 MCU = atmega32u4
@@ -562,16 +573,16 @@ flash: $(TARGET).hex
 
 clean:
 	rm -f *.elf *.hex *.o *.map *.lst
-````
+```
 
 
-# Carpeta .vscode:
+# Carpeta `.vscode`:
 
 > ⚠️ Recorda editar NAME, chequea el PATH de AVR-GDB. Para la realización de la Plantilla
 
 - launch.json:
 
-  ````
+  ```json
   {
     "version": "0.2.0",
     "configurations": [
@@ -587,14 +598,14 @@ clean:
       }
     ]
   }
-  ````
+  ```
 
 
   - task.json:
 
   > ⚠️ Recordá chequear PATH de MAKE. Para la realización de la Plantilla.
   
-    ````
+    ```json
     {
       "version": "2.0.0",
       "tasks": [
@@ -616,14 +627,14 @@ clean:
         }
       ]
     }
-    ````
+    ```
 
 
   - c_cpp_properties.json:
 
 	> ⚠️ Recordá chequear F_CPU, PATHS y Versiones de AVR. Para la realización de la Plantilla.
  
-    ````
+    ```json
     {
       "configurations": [
         {
@@ -641,19 +652,19 @@ clean:
       ],
       "version": 4
     }
-    ````
+    ```
 
 
 # Automaticemos la creación de estos archivos:
 - Sin importar cual sea tu proyecto de C para AVR, se creara la estructura de archivos, la cual traas cargar VSCode podras correr usando el menu ``Terminal -> Run Task -> Compile & Flash (make flash)``. Para esto, creamos un Script de Powershell, que pasandole el nombre del proyecto nos cree todo. Creamos un archivo de texto con extensión ``.ps1``.
 
-````
+```powershell
 notepad avr.ps1
-````
+```
 
 Pegamos el siguiente contenido:
 
-````
+```powershell
 # Verifica si se pasó un nombre de proyecto como argumento
 param (
     [string]$P
@@ -805,26 +816,27 @@ Write-Host "Proyecto '$P' creado exitosamente."
 
 # Abrir el proyecto en VSCode
 Start-Process "code" -ArgumentList $P -WindowStyle Hidden
-````
+```
 
 Guardamos, donde nos sea util. lo ejecutamos desde la Terminal, abriendo una donde se encuentre:
 
-````
+```powershell
 .\avr -P nombreProyecto
-````
+```
 
 Esto creará la estructura de archivos:
 
-````
-nombreProyecto/
-├── nombreProyecto.c
-├── Makefile
-└── .vscode/
-    ├── launch.json
-    ├── tasks.json
-    └── c_cpp_properties.json
-
-````
+<div>
+	<pre>
+	&#x1F4C1; nombreProyecto/
+	&#x251C;&#x2500;&#x2500; &#x1F4C4;nombreProyecto.c
+    &#x251C;&#x2500;&#x2500; &#x1F4C4;Makefile
+    &#x2514;&#x2500;&#x2500; &#x1F4C1;.vscode/
+        &#x251C;&#x2500;&#x2500; &#x1F4C4;launch.json
+        &#x251C;&#x2500;&#x2500; &#x1F4C4;tasks.json
+        &#x2514;&#x2500;&#x2500; &#x1F4C1;c_cpp_properties.json
+	</pre>
+</div>
 
 Y lo abrira en VSCode Listo para programar y flashear. La parte de DEBUG no funciona si no tenemos Hardware extra para hacer debug. Recordad que para solo compilar podemos correr la tarea: ``Terminal -> Run Task -> Build (make)`` [Atajo ``Ctrl+Shift+B``] y para Compilar y flashear: ``Terminal -> Run Task -> Compile & Flash (make flash)``
 
@@ -834,13 +846,13 @@ Y lo abrira en VSCode Listo para programar y flashear. La parte de DEBUG no func
 
 ## Para Atmega128:
 
-````
+```powershell
 notepad avr128.ps1
-````
+```
 
 Pegamos el siguiente contenido:
 
-````
+```powershell
 # Verifica si se pasó un nombre de proyecto como argumento
 param (
     [string]$P
@@ -992,25 +1004,25 @@ Write-Host "Proyecto '$P' creado exitosamente."
 
 # Abrir el proyecto en VSCode
 Start-Process "code" -ArgumentList $P -WindowStyle Hidden
-````
+```
 
 Guardamos, donde nos sea util. lo ejecutamos desde la Terminal, abriendo una donde se encuentre:
 
-````
+```powershell
 .\avr128.ps1 -P nombreProyecto
-````
+```
 
 ----
 
 ## Para Atmega328:
 
-````
+```powershell
 notepad avr328.ps1
-````
+```
 
 Pegamos el siguiente contenido:
 
-````
+```powershell
 # Verifica si se pasó un nombre de proyecto como argumento
 param (
     [string]$P
@@ -1162,13 +1174,13 @@ Write-Host "Proyecto '$P' creado exitosamente."
 
 # Abrir el proyecto en VSCode
 Start-Process "code" -ArgumentList $P -WindowStyle Hidden
-````
+```
 
 Guardamos, donde nos sea util. lo ejecutamos desde la Terminal, abriendo una donde se encuentre:
 
-````
+```powershell
 .\avr328.ps1 -P nombreProyecto
-````
+```
 
 ---
 
@@ -1177,18 +1189,20 @@ Guardamos, donde nos sea util. lo ejecutamos desde la Terminal, abriendo una don
 Instalamos AVR Toolchain, AVR Dude, Make con MSYS2 y agregamos todo a las variables de entorno.
 
 ## Abrimos la Terminal en dónde tengamos nuestra carpeta que contendrá nuestros diversos proyectos y escribimos los siguienter comandos:
-````
+
+```powershell
 mkdir proyecto_01
 cd Proyecto_01
 touch Makefile
 touch proyecto_01.c
 notepad proyecto_01.c
-````
+```
+
 Lo que hicimos es crear un directorio, entrar en él, crear los dos archivos y abrir uno de ellos con el editor de texto, si queremos usar vscode como editor se indica ``code proyecto_01.c``
 
 ### Pegamos o escribimos la plantilla de C:
 
- ````
+ ```c
     #include <avr/io.h>
     // Aquí puedes agregar cualquier otra librería que necesites
     
@@ -1201,19 +1215,19 @@ Lo que hicimos es crear un directorio, entrar en él, crear los dos archivos y a
     
         return 0;
     }
-  ````
+  ```
 
 Guardamos y salimos.
 
 ## Abrimos Makefile
 
-````
+```powershell
 notepad Makefile
-````
+```
 
 ### Pegamos o escribimos la plantilla de Makefile:
 
-````
+```makefile
 # Makefile para ATmega32U4 (Sparkfun Pro Micro) - Adaptado para VSCode + MSYS2
 
 MCU = atmega32u4
@@ -1255,28 +1269,32 @@ flash: $(TARGET).hex
 
 clean:
 	rm -f *.elf *.hex *.o *.map *.lst
-````
+```
 
 Guadamos sin extensión, si la agrega luego renombramos el archivo eliminando la extensión, se puede hacer con:
 
-````
+```powershell
 mv Makefile.txt Makefile
-````
+```
 
 ### Luego queda compilar:
-````
+
+```cmake
 make
-````
+```
 
 ### O compilar y flashear:
-````
+
+```cmake
 make flash
-````
+```
 
 ### Si debemos modificar el código de `C` limpiamos el build realizado con:
-````
+
+```cmake
 make clean
-````
+```
+
 Y volvemos a ejecutar make o make flash.
 
 > ⚠️ Si queremos utilizar VsCode como editor de texto, solo abrimos la terminal con ``Ctrl + ñ`` y luego introducimos los mismos comandos de compilación o compilación y flasheo, y el de limpieza del build.
@@ -1288,7 +1306,8 @@ Y volvemos a ejecutar make o make flash.
   volver a presionar ``Ctrl+Shift+P`` escribir ``Reload Window`` y dar enter, al recargar repetir Run Task y aparecerá.
 
   Los campos a modificar en el Script son:
-  ```
+  
+  ```c
   ####################################################
   # Modificar las siguientes variables según el micro
   $MCU = "atmega328"
@@ -1298,10 +1317,11 @@ Y volvemos a ejecutar make o make flash.
   $PROGRAMMER = "arduino"
   ####################################################
   ```
+  
   El resto no se toca!
 
 
-````
+```powershell
 # Verifica si se pasó un nombre de proyecto como argumento
 param (
     [string]$P
@@ -1471,6 +1491,6 @@ Write-Host "Proyecto '$P' creado exitosamente."
 
 # Abrir el proyecto en VSCode
 Start-Process "code" -ArgumentList $P -WindowStyle Hidden
-````
+```
 
 Guardar script con un nombre estilo ``avr.ps1`` y ejecutar como antes con ``.\avr -P Ejercicio01``
