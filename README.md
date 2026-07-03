@@ -1514,3 +1514,24 @@ Guardar script con un nombre estilo ``avr.ps1`` y ejecutar como antes con ``.\av
 
 ---
 
+---
+---
+
+<div align="center">
+	<h1>Instalación en Linux VSCode + AVRDude + AVR Toolchaon</h1>
+</div>
+
+<h2>Requisito:</h2>
+
+```bash
+sudo apt update && sudo apt install -y curl
+```
+
+<h2>Descargar y ejecutar script:</h2>
+
+```bash
+curl -sSL https://raw.githubusercontent.com/PIBSAS/c_avr_eclipse/main/linux_avr.sh | bash
+```
+
+----
+----
