@@ -32,6 +32,7 @@ wget "https://ww1.microchip.com/downloads/aemDocuments/documents/DEV/ProductDocu
 
 echo -e "${GREEN}==> Extrayendo archivo...${NC}"
 tar -xzf avr-toolchain.tar.gz
+rm avr-toolchain.tar.gz
 
 # La carpeta extraída se llama avr8-gnu-toolchain-linux_x86_64
 if [ -d "avr-toolchain" ]; then
