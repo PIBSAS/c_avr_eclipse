@@ -1522,7 +1522,7 @@ Guardar script con un nombre estilo ``avr.ps1`` y ejecutar como antes con ``.\av
 ---
 
 <div align="center">
-	<h1>Instalación en Linux VSCode + AVRDude + AVR Toolchaon</h1>
+	<h1>Instalación en Linux VSCode + AVRDude + AVR Toolchain</h1>
 </div>
 
 <h2>Requisito:</h2>
