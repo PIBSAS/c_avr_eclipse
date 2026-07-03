@@ -1533,5 +1533,11 @@ sudo apt update && sudo apt install -y curl
 curl -sSL https://raw.githubusercontent.com/PIBSAS/c_avr_eclipse/main/linux_avr.sh | bash
 ```
 
+<h2>Recargar la terminal:</h2>
+
+```bash
+source .bashrc
+```
+
 ----
 ----
