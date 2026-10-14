@@ -19,6 +19,7 @@
    	  	```bash
    	   pacman -S make
    	   ```
+## Variables de entorno a agregar:
 - Si usas Vs Code, bloc de notas o cualquier otro editor de texto/IDE, debes agregar las siguientes variables de entorno al sistema:
 - Yendo a ``Windows -> Configuración -> Sistema -> Información -> Configuración avanzada del sistema -> Botón Variables de entorno... -> Path(el de usuario), Editar, Nuevo, Examinar`` y buscar las siguientes 3 rutas de a una, aceptar y cerrar todas las ventanas de variable de entorno que se abrieron, cerrar cualquier terminal que este abierta:
   	- Para AVR-GCC, AVR-OBJCOPY y AVR-OBJDUMP: ``C:\avr-toolchain\bin``
@@ -26,7 +27,7 @@
   	- Para Make: ``C:\msys64\usr\bin``
 - Eclipse C/C++: [Elegir Eclipse IDE for C/C++ Developers](https://www.eclipse.org/downloads/packages/)
 
-## Variables de entorno(Eclipse).
+## Variables de entorno en Eclipse.
 
 - Menu ``Window -> Preferences -> C/C++ -> Build -> Environment``.
 - Boton Add..
