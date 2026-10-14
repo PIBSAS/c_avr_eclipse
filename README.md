@@ -7,17 +7,20 @@
 # Requisitos:
 ## Webs:
 - AVR Toolchain para Windows: [De Microchips](https://www.microchip.com/en-us/tools-resources/develop/microchip-studio/gcc-compilers)
+	- Descomprimimos, entramos a la carpeta, veremos que esta la carpeta ``avrN-gnu-toolchain-win32_x86_64`` la renombramos a ``avr-toolchain``, movemos esta carpeta a la unidad C. Queda: ``C:\avr-toolchain``. Eliminamos el ``.zip``.
 - AVR Dude(Donde X.x sera la versión actual): [GitHub Zip usado: avrdude-vX.x-windows-mingw-x64](https://github.com/avrdudes/avrdude/releases)
+	- Descomprimimos, en este no existe una carpeta interior, asi que su carpeta al descomprimir es: ``avrdude-vX.Y-windows_mingw-x64``, la renombramos a ``avrdude``, movemos la carpeta a la unidad C. Queda: ``C:\avrdude``. Eliminamos el ``.zip``.
 - MSYS2: [Bajar .exe, ejecutar, siguiente, cuando termina se abre una Terminal](https://www.msys2.org/)
 	- En ella escribir:
  		```bash
    		pacman -Syu
    		```
-   	- Luego:
+   	- Responder ``Y`` ambas veces. Luego ir a ``Windows -> MSYS2 -> MSYS2 UCRT`` e instalar make, responder ``Y``, cerrar la Terminal UCRT tras la instalación. Eliminar ``.exe`` de Descargas.:
    	  	```bash
    	   pacman -S make
    	   ```
-- Si usas Vs Code o el bloc de notas, debes agregar las siguientes variables de entorno al sistema:
+- Si usas Vs Code, bloc de notas o cualquier otro editor de texto/IDE, debes agregar las siguientes variables de entorno al sistema:
+- Yendo a ``Windows -> Configuración -> Sistema -> Información -> Configuración avanzada del sistema -> Botón Variables de entorno... -> Path(el de usuario), Editar, Nuevo, Examinar`` y buscar las siguientes 3 rutas de a una, aceptar y cerrar todas las ventanas de variable de entorno que se abrieron, cerrar cualquier terminal que este abierta:
   	- Para AVR-GCC, AVR-OBJCOPY y AVR-OBJDUMP: ``C:\avr-toolchain\bin``
   	- Para flashear AVR DUDE: ``C:\avrdude\``
   	- Para Make: ``C:\msys64\usr\bin``
